@@ -38,7 +38,7 @@ const calculateWflNetCatchTime = (distanceKm: number, runnerStartDelayMinutes: n
         netRunnerTimeMinutes += stage.stageDurationMinutes;
     }
 
-    const lastSpeed = catcherCarSchedule[catcherCarSchedule.length - 1].speedKmH;
+    const lastSpeed = catcherCarSchedule[catcherCarSchedule.length - 1]?.speedKmH!;
     const remainingDistance = distanceKm - carDistanceKm;
 
     if (lastSpeed > 0) {

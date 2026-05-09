@@ -17,7 +17,7 @@ type CalculationContext = {
     exponent: number;
 };
 
-const REFINEMENT_STEPS = [1, 0.1, 0.01, 0.001];
+const REFINEMENT_STEPS = [1, 0.1, 0.01, 0.001] as const;
 
 const MIN_DISTANCE_IN_KMS = 0;
 const MAX_DISTANCE_IN_KMS = 100;
@@ -78,8 +78,8 @@ const calculateOptimalRunParams = (
     let bestResult: OptimalRunParams | null = null;
 
     for (let index = 0; index < REFINEMENT_STEPS.length; index += 1) {
-        const stepKms = REFINEMENT_STEPS[index];
-        const previousStepKms = index > 0 ? REFINEMENT_STEPS[index - 1] : MAX_DISTANCE_IN_KMS;
+        const stepKms = REFINEMENT_STEPS[index]!;
+        const previousStepKms = index > 0 ? REFINEMENT_STEPS[index - 1]! : MAX_DISTANCE_IN_KMS;
         const centerDistanceKms =
             bestResult === null ? (MIN_DISTANCE_IN_KMS + MAX_DISTANCE_IN_KMS) / 2 : bestResult.distanceKms;
         const rangeHalfWidthKms = bestResult === null ? MAX_DISTANCE_IN_KMS : previousStepKms;
@@ -90,7 +90,7 @@ const calculateOptimalRunParams = (
             {
                 startDistanceKms: rangeStartKms,
                 endDistanceKms: rangeEndKms,
-                stepKms: stepKms,
+                stepKms,
                 currentBest: bestResult,
             },
             context
@@ -101,7 +101,7 @@ const calculateOptimalRunParams = (
         }
     }
 
-    return {...bestResult, avgPace: bestResult.netRunnerTimeMinutes/bestResult.distanceKms};
+    return bestResult;
 };
 
 export default calculateOptimalRunParams;

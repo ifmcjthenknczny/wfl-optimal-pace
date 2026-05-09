@@ -46,7 +46,8 @@ const RAW_RUNTIME_STATE =
           ["vite-plugin-vue-devtools", "virtual:ac493f322bd41488d1a4e45d852165930d7155272cf752ad7e60a46067f6037faf989208590a8de69445879354596503aec1f93a123630c93bb9fee60a4a5ff3#npm:8.1.2"],\
           ["vue", "virtual:ac493f322bd41488d1a4e45d852165930d7155272cf752ad7e60a46067f6037faf989208590a8de69445879354596503aec1f93a123630c93bb9fee60a4a5ff3#npm:3.5.34"],\
           ["vue-tsc", "virtual:ac493f322bd41488d1a4e45d852165930d7155272cf752ad7e60a46067f6037faf989208590a8de69445879354596503aec1f93a123630c93bb9fee60a4a5ff3#npm:3.2.8"],\
-          ["wings-for-life-optimal-pace", "workspace:."]\
+          ["wings-for-life-optimal-pace", "workspace:."],\
+          ["zod", "npm:4.4.3"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -4031,7 +4032,8 @@ const RAW_RUNTIME_STATE =
           ["vite-plugin-vue-devtools", "virtual:ac493f322bd41488d1a4e45d852165930d7155272cf752ad7e60a46067f6037faf989208590a8de69445879354596503aec1f93a123630c93bb9fee60a4a5ff3#npm:8.1.2"],\
           ["vue", "virtual:ac493f322bd41488d1a4e45d852165930d7155272cf752ad7e60a46067f6037faf989208590a8de69445879354596503aec1f93a123630c93bb9fee60a4a5ff3#npm:3.5.34"],\
           ["vue-tsc", "virtual:ac493f322bd41488d1a4e45d852165930d7155272cf752ad7e60a46067f6037faf989208590a8de69445879354596503aec1f93a123630c93bb9fee60a4a5ff3#npm:3.2.8"],\
-          ["wings-for-life-optimal-pace", "workspace:."]\
+          ["wings-for-life-optimal-pace", "workspace:."],\
+          ["zod", "npm:4.4.3"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -4085,6 +4087,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../.yarn/berry/cache/yocto-queue-npm-0.1.0-c6c9a7db29-10c0.zip/node_modules/yocto-queue/",\
         "packageDependencies": [\
           ["yocto-queue", "npm:0.1.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["zod", [\
+      ["npm:4.4.3", {\
+        "packageLocation": "../../.yarn/berry/cache/zod-npm-4.4.3-36e81f791e-10c0.zip/node_modules/zod/",\
+        "packageDependencies": [\
+          ["zod", "npm:4.4.3"]\
         ],\
         "linkType": "HARD"\
       }]\
