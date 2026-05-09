@@ -2,9 +2,9 @@ export const calculatePace = (timeMinutes: number, distanceKms: number) => {
   return timeMinutes / distanceKms
 }
 
-export const toTwoDigits = (value: number) => (value < 10 ? `0${value}` : `${value}`)
+const toTwoDigits = (value: number) => (value < 10 ? `0${value}` : `${value}`)
 
-export const formatMinutes = (timeMinutes: number) => {
+export const formatTime = (timeMinutes: number) => {
   const totalSeconds = Math.max(0, Math.round(timeMinutes * 60))
   const hours = Math.floor(totalSeconds / 3600)
   const minutes = Math.floor((totalSeconds % 3600) / 60)

@@ -1,50 +1,73 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { z } from 'zod'
 import calculateOptimalRunParams from './optimize'
-import { formatMinutes, formatPace, toTwoDigits } from './helpers'
+import { formatTime, formatPace } from './helpers'
 
-const referenceDistanceKms = ref(10)
-const referenceTimeHours = ref(0)
-const referenceTimeMinutes = ref(50)
-const referenceTimeSeconds = ref(0)
-const runnerStartDelayMinutes = ref(0)
 // const selectedExponent = ref(MIN_RIEGEL_EXPONENT)
+
+const MIN_REASONABLE_DISTANCE_KMS = 1.5
+const MIN_REASONABLE_TIME_SECONDS = 3.5 * 60
 
 const formSchema = z
   .object({
-    referenceDistanceKms: z.number().positive(),
-    referenceTimeHours: z.number().min(0),
-    referenceTimeMinutes: z.number().int().min(0).max(59),
-    referenceTimeSeconds: z.number().int().min(0).max(59),
-    runnerStartDelayMinutes: z.number().min(0),
+    referenceDistanceKms: z
+      .number('Wpisz dystans jako liczbę')
+      .positive('Dystans musi być większy niż 0 km'),
+
+    referenceTimeHours: z.number('Wpisz godziny jako liczbę').min(0, 'Godziny nie mogą być ujemne'),
+
+    referenceTimeMinutes: z
+      .number('Wpisz minuty jako liczbę')
+      .int('Minuty muszą być liczbą całkowitą')
+      .min(0, 'Minuty nie mogą być ujemne')
+      .max(59, 'Minuty muszą być w zakresie 0-59'),
+
+    referenceTimeSeconds: z
+      .number('Wpisz sekundy jako liczbę')
+      .int('Sekundy muszą być liczbą całkowitą')
+      .min(0, 'Sekundy nie mogą być ujemne')
+      .max(59, 'Sekundy muszą być w zakresie 0-59'),
+
+    runnerStartDelayMinutes: z
+      .number('Wpisz opóźnienie jako liczbę')
+      .min(0, 'Opóźnienie nie może być ujemne'),
   })
   .refine(
     (values) =>
       values.referenceTimeHours * 3600 +
         values.referenceTimeMinutes * 60 +
         values.referenceTimeSeconds >
-      0,
-    { message: 'Czas referencyjny musi być większy od zera.' },
+      MIN_REASONABLE_TIME_SECONDS,
+    {
+      message: `Czas referencyjny musi być większy od najniższego mającego sens w obliczeniach - ${formatTime(MIN_REASONABLE_TIME_SECONDS)}.`,
+    },
   )
+  .refine((values) => values.referenceDistanceKms > MIN_REASONABLE_DISTANCE_KMS, {
+    message: `Dystans referencyjny musi być większy od najniższego mającego sens w obliczeniach - ${MIN_REASONABLE_DISTANCE_KMS} minuty.`,
+  })
 
-const referenceTimeTotalSeconds = computed(
-  () =>
-    referenceTimeHours.value * 3600 + referenceTimeMinutes.value * 60 + referenceTimeSeconds.value,
-)
+type FormState = z.infer<typeof formSchema>
+
+const formState = reactive<FormState>({
+  referenceDistanceKms: 10,
+  referenceTimeHours: 0,
+  referenceTimeMinutes: 50,
+  referenceTimeSeconds: 0,
+  runnerStartDelayMinutes: 0,
+})
 
 const hasAttemptedCalculation = ref(false)
 const result = ref<ReturnType<typeof calculateOptimalRunParams>>(null)
 
-const validationResult = computed(() =>
-  formSchema.safeParse({
-    referenceDistanceKms: referenceDistanceKms.value,
-    referenceTimeHours: referenceTimeHours.value,
-    referenceTimeMinutes: referenceTimeMinutes.value,
-    referenceTimeSeconds: referenceTimeSeconds.value,
-    runnerStartDelayMinutes: runnerStartDelayMinutes.value,
-  }),
+const referenceTimeTotalSeconds = computed(
+  () =>
+    formState.referenceTimeHours * 3600 +
+    formState.referenceTimeMinutes * 60 +
+    formState.referenceTimeSeconds,
 )
+
+const validationResult = computed(() => formSchema.safeParse(formState))
 
 const formIsValid = computed(() => validationResult.value.success)
 const validationMessage = computed(() =>
@@ -63,8 +86,8 @@ const calculate = () => {
 
   result.value = calculateOptimalRunParams(
     referenceTimeTotalSeconds.value,
-    referenceDistanceKms.value,
-    runnerStartDelayMinutes.value,
+    formState.referenceDistanceKms,
+    formState.runnerStartDelayMinutes,
     // selectedExponent.value,
   )
 }
@@ -75,7 +98,7 @@ const calculate = () => {
     <div class="form-grid">
       <label>
         Dystans zawodów [km]
-        <input v-model.number="referenceDistanceKms" type="number" min="0.1" step="0.1" />
+        <input v-model.number="formState.referenceDistanceKms" type="number" min="0.1" step="0.1" />
       </label>
 
       <fieldset>
@@ -83,22 +106,34 @@ const calculate = () => {
         <div class="time-grid">
           <label>
             [h]
-            <input v-model.number="referenceTimeHours" type="number" min="0" step="1" />
+            <input v-model.number="formState.referenceTimeHours" type="number" min="0" step="1" />
           </label>
           <label>
             [min]
-            <input v-model.number="referenceTimeMinutes" type="number" min="0" max="59" step="1" />
+            <input
+              v-model.number="formState.referenceTimeMinutes"
+              type="number"
+              min="0"
+              max="59"
+              step="1"
+            />
           </label>
           <label>
             [s]
-            <input v-model.number="referenceTimeSeconds" type="number" min="0" max="59" step="1" />
+            <input
+              v-model.number="formState.referenceTimeSeconds"
+              type="number"
+              min="0"
+              max="59"
+              step="1"
+            />
           </label>
         </div>
       </fieldset>
 
       <label>
         Opóźnienie startu biegacza na Wings For Life [min]
-        <input v-model.number="runnerStartDelayMinutes" type="number" min="0" step="1" />
+        <input v-model.number="formState.runnerStartDelayMinutes" type="number" min="0" step="1" />
       </label>
 
       <!-- <label>
@@ -134,12 +169,12 @@ const calculate = () => {
         <div class="result-group">
           <div class="result-item-inner">
             <span class="result-label">Czas netto</span>
-            <strong class="result-value">{{ formatMinutes(result.netRunnerTimeMinutes) }}</strong>
+            <strong class="result-value">{{ formatTime(result.netRunnerTimeMinutes) }}</strong>
           </div>
           <div class="result-divider"></div>
           <div class="result-item-inner">
             <span class="result-label">Czas brutto</span>
-            <strong class="result-value">{{ formatMinutes(result.grossRunnerTimeMinutes) }}</strong>
+            <strong class="result-value">{{ formatTime(result.grossRunnerTimeMinutes) }}</strong>
           </div>
         </div>
       </div>
