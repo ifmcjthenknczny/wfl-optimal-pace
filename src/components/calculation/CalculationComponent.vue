@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import { z } from "zod";
-import calculateOptimalRunParams from "./optimize";
-import { MIN_RIEGEL_EXPONENT } from "./riegel";
+import { computed, ref } from 'vue'
+import { z } from 'zod'
+import calculateOptimalRunParams from './optimize'
+import { MIN_RIEGEL_EXPONENT } from './riegel'
 
-const referenceDistanceKms = ref(10);
-const referenceTimeHours = ref(0);
-const referenceTimeMinutes = ref(50);
-const referenceTimeSeconds = ref(0);
-const runnerStartDelayMinutes = ref(0);
-const selectedExponent = ref(MIN_RIEGEL_EXPONENT);
+const referenceDistanceKms = ref(10)
+const referenceTimeHours = ref(0)
+const referenceTimeMinutes = ref(50)
+const referenceTimeSeconds = ref(0)
+const runnerStartDelayMinutes = ref(0)
+const selectedExponent = ref(MIN_RIEGEL_EXPONENT)
 
 const formSchema = z
   .object({
@@ -20,33 +20,38 @@ const formSchema = z
     runnerStartDelayMinutes: z.number().min(0),
   })
   .refine(
-    (values) => values.referenceTimeHours * 3600 + values.referenceTimeMinutes * 60 + values.referenceTimeSeconds > 0,
-    { message: "Czas referencyjny musi być większy od zera." }
-  );
+    (values) =>
+      values.referenceTimeHours * 3600 +
+        values.referenceTimeMinutes * 60 +
+        values.referenceTimeSeconds >
+      0,
+    { message: 'Czas referencyjny musi być większy od zera.' },
+  )
 
-const toTwoDigits = (value: number) => (value < 10 ? `0${value}` : `${value}`);
+const toTwoDigits = (value: number) => (value < 10 ? `0${value}` : `${value}`)
 
 const formatMinutesToClock = (timeMinutes: number) => {
-  const totalSeconds = Math.max(0, Math.round(timeMinutes * 60));
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-  return `${toTwoDigits(hours)}:${toTwoDigits(minutes)}:${toTwoDigits(seconds)}`;
-};
+  const totalSeconds = Math.max(0, Math.round(timeMinutes * 60))
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+  return `${toTwoDigits(hours)}:${toTwoDigits(minutes)}:${toTwoDigits(seconds)}`
+}
 
 const formatPace = (paceMinutesPerKm: number) => {
-  const totalSeconds = Math.max(0, Math.round(paceMinutesPerKm * 60));
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes}:${toTwoDigits(seconds)} min/km`;
-};
+  const totalSeconds = Math.max(0, Math.round(paceMinutesPerKm * 60))
+  const minutes = Math.floor(totalSeconds / 60)
+  const seconds = totalSeconds % 60
+  return `${minutes}:${toTwoDigits(seconds)} min/km`
+}
 
 const referenceTimeTotalSeconds = computed(
-  () => referenceTimeHours.value * 3600 + referenceTimeMinutes.value * 60 + referenceTimeSeconds.value
-);
+  () =>
+    referenceTimeHours.value * 3600 + referenceTimeMinutes.value * 60 + referenceTimeSeconds.value,
+)
 
-const hasAttemptedCalculation = ref(false);
-const result = ref<ReturnType<typeof calculateOptimalRunParams>>(null);
+const hasAttemptedCalculation = ref(false)
+const result = ref<ReturnType<typeof calculateOptimalRunParams>>(null)
 
 const validationResult = computed(() =>
   formSchema.safeParse({
@@ -55,34 +60,38 @@ const validationResult = computed(() =>
     referenceTimeMinutes: referenceTimeMinutes.value,
     referenceTimeSeconds: referenceTimeSeconds.value,
     runnerStartDelayMinutes: runnerStartDelayMinutes.value,
-  })
-);
+  }),
+)
 
-const formIsValid = computed(() => validationResult.value.success);
+const formIsValid = computed(() => validationResult.value.success)
 const validationMessage = computed(() =>
-  validationResult.value.success ? "" : validationResult.value.error.issues[0]?.message ?? "Uzupełnij poprawnie wszystkie pola."
-);
+  validationResult.value.success
+    ? ''
+    : (validationResult.value.error.issues[0]?.message ?? 'Uzupełnij poprawnie wszystkie pola.'),
+)
 
 const calculate = () => {
-  hasAttemptedCalculation.value = true;
+  hasAttemptedCalculation.value = true
 
   if (!formIsValid.value) {
-    result.value = null;
-    return;
+    result.value = null
+    return
   }
 
   result.value = calculateOptimalRunParams(
     referenceTimeTotalSeconds.value,
     referenceDistanceKms.value,
     runnerStartDelayMinutes.value,
-    selectedExponent.value
-  );
-};
+    selectedExponent.value,
+  )
+}
 </script>
 
 <template>
   <section class="calculator-card">
-    <p class="subtitle">Podaj swój wynik referencyjny i profil biegacza, a wyliczymy optymalny cel.</p>
+    <p class="subtitle">
+      Podaj swój wynik referencyjny i profil biegacza, a wyliczymy optymalny cel.
+    </p>
 
     <div class="form-grid">
       <label>
@@ -130,8 +139,13 @@ const calculate = () => {
     <div v-if="hasAttemptedCalculation && formIsValid && result" class="results">
       <h3>Wynik</h3>
       <p><strong>Optymalny dystans:</strong> {{ result.distanceKms.toFixed(2) }} km</p>
-      <p><strong>Czas biegu netto:</strong> {{ formatMinutesToClock(result.netRunnerTimeMinutes) }}</p>
-      <p><strong>Czas biegu brutto:</strong> {{ formatMinutesToClock(result.grossRunnerTimeMinutes) }}</p>
+      <p>
+        <strong>Czas biegu netto:</strong> {{ formatMinutesToClock(result.netRunnerTimeMinutes) }}
+      </p>
+      <p>
+        <strong>Czas biegu brutto:</strong>
+        {{ formatMinutesToClock(result.grossRunnerTimeMinutes) }}
+      </p>
       <p><strong>Średnie tempo:</strong> {{ formatPace(result.avgPace) }}</p>
       <p><strong>Różnica runner-car:</strong> {{ result.diffMinutes.toFixed(2) }} min</p>
     </div>
