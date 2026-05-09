@@ -3,8 +3,8 @@
     <img alt="Wings for Life logo" class="logo" src="../assets/logo.png" />
     <h1>Kalkulator Wings for Life</h1>
     <p>
-      Podaj swój wynik referencyjny i profil biegacza, aby szybko oszacować realny cel na bieg.
-      Model porównuje Twój czas z tempem samochodu pościgowego i podaje optymalny dystans oraz tempo.
+      Podaj swój wynik z ostatnich zawodów aby oszacować realny cel i tempo na bieg.
+      Model wylicza Twoje możliwości na podstawie wzorów Riegela i porównuje ze schematem poruszania się samochodu pościgowego.
     </p>
   </div>
 </template>

@@ -20,7 +20,15 @@ header {
   line-height: 1.5;
 }
 
+main {
+  margin-top: 2rem;
+}
+
 @media (min-width: 1024px) {
+  main {
+    margin-top: 0;
+  }
+
   header {
     display: flex;
     place-items: center;

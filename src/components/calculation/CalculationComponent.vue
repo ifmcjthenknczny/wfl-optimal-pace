@@ -89,10 +89,6 @@ const calculate = () => {
 
 <template>
   <section class="calculator-card">
-    <p class="subtitle">
-      Podaj swój wynik referencyjny i profil biegacza, a wyliczymy optymalny cel.
-    </p>
-
     <div class="form-grid">
       <label>
         Dystans referencyjny (km)
@@ -122,21 +118,21 @@ const calculate = () => {
         <input v-model.number="runnerStartDelayMinutes" type="number" min="0" step="1" />
       </label>
 
-      <label>
+      <!-- <label>
         Doświadczenie biegacza na dystansach 10+ km
         <select v-model.number="selectedExponent">
           <option :value="1.06">Doświadczony (1.06)</option>
           <option :value="1.08">Średnio doświadczony (1.08)</option>
           <option :value="1.1">Niedoświadczony (1.1)</option>
         </select>
-      </label>
+      </label> -->
 
       <button class="calculate-button" type="button" @click="calculate">Oblicz</button>
     </div>
 
     <p v-if="hasAttemptedCalculation && !formIsValid" class="error">{{ validationMessage }}</p>
 
-    <div v-if="hasAttemptedCalculation && formIsValid && result" class="results">
+    <div v-if="hasAttemptedCalculation && result" class="results">
       <h3>Wynik</h3>
       <p><strong>Optymalny dystans:</strong> {{ result.distanceKms.toFixed(3) }} km</p>
       <p>
