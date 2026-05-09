@@ -4,8 +4,9 @@
     <h1>Kalkulator Optymalnego Biegu</h1>
     <p>Podaj swój wynik z ostatnich zawodów aby oszacować realny cel tempa na bieg.</p>
     <p>
-      Model wylicza Twoje możliwości na podstawie wzorów Riegla, porównuje ze schematem poruszania
-      się samochodu pościgowego i optymalizuje pod kątem najdłuższego przebytego dystansu.
+      Model wylicza Twoje możliwości na podstawie wzorów Riegla, porównuje je ze schematem
+      poruszania się samochodu pościgowego i optymalizuje pod kątem najdłuższego przebytego
+      dystansu.
     </p>
   </div>
 </template>

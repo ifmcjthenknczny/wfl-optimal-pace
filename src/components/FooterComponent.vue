@@ -21,13 +21,6 @@ p {
   align-items: center;
 }
 
-@media (max-width: 768px) {
-  .footer-container {
-    flex-direction: column;
-    gap: 0em;
-  }
-}
-
 .footer {
   position: fixed;
   bottom: 0;

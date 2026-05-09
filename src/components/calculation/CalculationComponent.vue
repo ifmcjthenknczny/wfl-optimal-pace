@@ -96,7 +96,7 @@ const calculate = () => {
       </label>
 
       <fieldset>
-        <legend>Wynik na zawodach</legend>
+        <legend>Wynik na zawodach (czas netto)</legend>
         <div class="time-grid">
           <label>
             [h]
@@ -134,7 +134,7 @@ const calculate = () => {
 
     <div v-if="hasAttemptedCalculation && result" class="results">
       <div class="results-header">
-        <h3>Wynik obliczeń (optymalny bieg):</h3>
+        <h3>Wynik obliczeń:</h3>
       </div>
 
       <div class="results-grid">
@@ -148,18 +148,20 @@ const calculate = () => {
           <strong class="result-value">{{ result.distanceKms.toFixed(3) }} km</strong>
         </div>
 
-        <div class="result-item">
-          <span class="result-label">Czas biegu netto</span>
-          <strong class="result-value">{{
-            formatMinutesToClock(result.netRunnerTimeMinutes)
-          }}</strong>
-        </div>
-
-        <div class="result-item">
-          <span class="result-label">Czas biegu brutto</span>
-          <strong class="result-value">{{
-            formatMinutesToClock(result.grossRunnerTimeMinutes)
-          }}</strong>
+        <div class="result-group">
+          <div class="result-item-inner">
+            <span class="result-label">Czas netto</span>
+            <strong class="result-value">{{
+              formatMinutesToClock(result.netRunnerTimeMinutes)
+            }}</strong>
+          </div>
+          <div class="result-divider"></div>
+          <div class="result-item-inner">
+            <span class="result-label">Czas brutto</span>
+            <strong class="result-value">{{
+              formatMinutesToClock(result.grossRunnerTimeMinutes)
+            }}</strong>
+          </div>
         </div>
       </div>
     </div>
@@ -224,15 +226,10 @@ legend {
 
 .time-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(120px, 1fr));
+  grid-template-columns: 1fr;
+
   gap: 0.6rem;
   text-align: right;
-}
-
-@media (max-width: 640px) {
-  .time-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 .results {
@@ -242,6 +239,7 @@ legend {
   background: color-mix(in srgb, var(--color-background-mute) 78%, transparent);
   border: 1px solid var(--color-border);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  text-align: center;
 }
 
 .results-header {
@@ -268,6 +266,7 @@ legend {
 .results-grid {
   display: grid;
   gap: 0.6rem;
+  grid-template-columns: 1fr;
 }
 
 .result-item {
@@ -312,12 +311,61 @@ legend {
   cursor: pointer;
 }
 
-.calculate-button:hover {
+.calculate-button:hover,
+.calculate-button:focus {
   background: #2a7d5f;
 }
 
 .error {
   margin-top: 1rem;
   color: #b42318;
+}
+
+.result-group {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  align-items: stretch;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--color-background) 92%, transparent);
+  overflow: hidden;
+}
+
+.result-item-inner {
+  flex: 1;
+  padding: 0.7rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.result-divider {
+  width: auto;
+  height: 1px;
+  margin: 0 0.8rem;
+  background-color: var(--color-border);
+}
+
+@media (min-width: 641px) {
+  .results-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .result-group {
+    display: contents;
+  }
+
+  .result-item-inner {
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--color-background) 92%, transparent);
+  }
+
+  .result-divider {
+    display: none;
+  }
+
+  .time-grid {
+    grid-template-columns: repeat(3, minmax(120px, 1fr));
+  }
 }
 </style>
