@@ -3,8 +3,9 @@
     <img alt="Wings for Life logo" class="logo" src="../assets/logo.png" />
     <h1>Kalkulator Wings for Life</h1>
     <p>
-      Podaj swój wynik z ostatnich zawodów aby oszacować realny cel tempa na bieg.
-      Model wylicza Twoje optymalne możliwości na podstawie wzorów Riegla i porównuje ze schematem poruszania się samochodu pościgowego.
+      Podaj swój wynik z ostatnich zawodów aby oszacować realny cel tempa na bieg. Model wylicza
+      Twoje optymalne możliwości na podstawie wzorów Riegla i porównuje ze schematem poruszania się
+      samochodu pościgowego.
     </p>
   </div>
 </template>

@@ -3,9 +3,7 @@ type CatcherCarSchedule = {
   speedKmH: number
 }[]
 
-const calculateWflCarCatchTime = (
-  distanceKm: number,
-): number | null => {
+const calculateWflCarCatchTime = (distanceKm: number): number | null => {
   if (distanceKm <= 0) {
     return 0
   }

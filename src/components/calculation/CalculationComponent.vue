@@ -150,12 +150,16 @@ const calculate = () => {
 
         <div class="result-item">
           <span class="result-label">Czas biegu netto</span>
-          <strong class="result-value">{{ formatMinutesToClock(result.netRunnerTimeMinutes) }}</strong>
+          <strong class="result-value">{{
+            formatMinutesToClock(result.netRunnerTimeMinutes)
+          }}</strong>
         </div>
 
         <div class="result-item">
           <span class="result-label">Czas biegu brutto</span>
-          <strong class="result-value">{{ formatMinutesToClock(result.grossRunnerTimeMinutes) }}</strong>
+          <strong class="result-value">{{
+            formatMinutesToClock(result.grossRunnerTimeMinutes)
+          }}</strong>
         </div>
       </div>
     </div>

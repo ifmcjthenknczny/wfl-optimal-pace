@@ -18,12 +18,13 @@ type CalculationContext = {
 }
 
 const REFINEMENT_EXPONENTS = [0, -1, -2, -3]
-const REFINEMENT_STEPS = REFINEMENT_EXPONENTS.map((exponent) => 10**exponent)
+const REFINEMENT_STEPS = REFINEMENT_EXPONENTS.map((exponent) => 10 ** exponent)
 
 const MIN_DISTANCE_IN_KMS = REFINEMENT_STEPS.at(-1)!
 const MAX_DISTANCE_IN_KMS = 100
 
-const roundDistance = (distanceKms: number) => Number(distanceKms.toFixed(Math.abs(REFINEMENT_EXPONENTS.at(-1)!)))
+const roundDistance = (distanceKms: number) =>
+  Number(distanceKms.toFixed(Math.abs(REFINEMENT_EXPONENTS.at(-1)!)))
 const clampDistance = (distanceKms: number) =>
   Math.min(MAX_DISTANCE_IN_KMS, Math.max(MIN_DISTANCE_IN_KMS, distanceKms))
 
@@ -50,11 +51,7 @@ const scanRange = (
     const runnerTimeMinutes = calculateRunnerTime(baseValues, targetDistanceKms, context.exponent)
     const catchTimeMinutes = calculateWflCarCatchTime(targetDistanceKms)
 
-    if (
-      catchTimeMinutes === null ||
-      !isFinite(runnerTimeMinutes) ||
-      !isFinite(catchTimeMinutes)
-    ) {
+    if (catchTimeMinutes === null || !isFinite(runnerTimeMinutes) || !isFinite(catchTimeMinutes)) {
       continue
     }
 
