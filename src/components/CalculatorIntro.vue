@@ -1,11 +1,11 @@
 <template>
   <div class="intro">
     <img alt="Wings for Life logo" class="logo" src="../assets/logo.png" />
-    <h1>Kalkulator Wings for Life</h1>
+    <h1>Kalkulator Optymalnego Biegu</h1>
+    <p>Podaj swój wynik z ostatnich zawodów aby oszacować realny cel tempa na bieg.</p>
     <p>
-      Podaj swój wynik z ostatnich zawodów aby oszacować realny cel tempa na bieg. Model wylicza
-      Twoje optymalne możliwości na podstawie wzorów Riegla i porównuje ze schematem poruszania się
-      samochodu pościgowego.
+      Model wylicza Twoje możliwości na podstawie wzorów Riegla, porównuje ze schematem poruszania
+      się samochodu pościgowego i optymalizuje pod kątem najdłuższego przebytego dystansu.
     </p>
   </div>
 </template>
@@ -31,7 +31,7 @@ h1 {
 
 p {
   max-width: 720px;
-  margin: 0 auto;
+  margin: 8px 0;
   color: var(--color-text);
   opacity: 0.9;
 }

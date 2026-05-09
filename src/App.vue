@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import CalculatorIntro from './components/CalculatorIntro.vue'
+import FooterComponent from './components/FooterComponent.vue'
 import CalculationComponent from './components/calculation/CalculationComponent.vue'
 </script>
 
@@ -13,6 +14,7 @@ import CalculationComponent from './components/calculation/CalculationComponent.
   <main>
     <CalculationComponent />
   </main>
+  <FooterComponent />
 </template>
 
 <style scoped>

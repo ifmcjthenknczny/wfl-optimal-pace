@@ -91,30 +91,30 @@ const calculate = () => {
   <section class="calculator-card">
     <div class="form-grid">
       <label>
-        Dystans referencyjny (km)
+        Dystans zawodów [km]
         <input v-model.number="referenceDistanceKms" type="number" min="0.1" step="0.1" />
       </label>
 
       <fieldset>
-        <legend>Czas referencyjny</legend>
+        <legend>Wynik na zawodach</legend>
         <div class="time-grid">
           <label>
-            godziny
+            [h]
             <input v-model.number="referenceTimeHours" type="number" min="0" step="1" />
           </label>
           <label>
-            minuty
+            [min]
             <input v-model.number="referenceTimeMinutes" type="number" min="0" max="59" step="1" />
           </label>
           <label>
-            sekundy
+            [s]
             <input v-model.number="referenceTimeSeconds" type="number" min="0" max="59" step="1" />
           </label>
         </div>
       </fieldset>
 
       <label>
-        Opóźnienie startu biegacza (min)
+        Opóźnienie startu biegacza na Wings For Life [min]
         <input v-model.number="runnerStartDelayMinutes" type="number" min="0" step="1" />
       </label>
 
@@ -134,7 +134,7 @@ const calculate = () => {
 
     <div v-if="hasAttemptedCalculation && result" class="results">
       <div class="results-header">
-        <h3>Wynik</h3>
+        <h3>Wynik obliczeń (optymalny bieg):</h3>
       </div>
 
       <div class="results-grid">
@@ -226,6 +226,7 @@ legend {
   display: grid;
   grid-template-columns: repeat(3, minmax(120px, 1fr));
   gap: 0.6rem;
+  text-align: right;
 }
 
 @media (max-width: 640px) {
