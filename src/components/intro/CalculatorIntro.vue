@@ -1,6 +1,6 @@
 <template>
   <div class="intro">
-    <img alt="Wings for Life logo" class="logo" src="../assets/logo.png" />
+    <img alt="Wings for Life logo" class="logo" src="@/assets/logo.png" />
     <h1>Kalkulator Optymalnego Biegu</h1>
     <p>Podaj swój wynik z ostatnich zawodów aby oszacować realny cel tempa na bieg.</p>
     <p>

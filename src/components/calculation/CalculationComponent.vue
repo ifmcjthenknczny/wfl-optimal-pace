@@ -2,14 +2,14 @@
 import { computed, ref } from 'vue'
 import { z } from 'zod'
 import calculateOptimalRunParams from './optimize'
-import { MIN_RIEGEL_EXPONENT } from './riegel'
+import { formatMinutes, formatPace, toTwoDigits } from './helpers'
 
 const referenceDistanceKms = ref(10)
 const referenceTimeHours = ref(0)
 const referenceTimeMinutes = ref(50)
 const referenceTimeSeconds = ref(0)
 const runnerStartDelayMinutes = ref(0)
-const selectedExponent = ref(MIN_RIEGEL_EXPONENT)
+// const selectedExponent = ref(MIN_RIEGEL_EXPONENT)
 
 const formSchema = z
   .object({
@@ -27,23 +27,6 @@ const formSchema = z
       0,
     { message: 'Czas referencyjny musi być większy od zera.' },
   )
-
-const toTwoDigits = (value: number) => (value < 10 ? `0${value}` : `${value}`)
-
-const formatMinutesToClock = (timeMinutes: number) => {
-  const totalSeconds = Math.max(0, Math.round(timeMinutes * 60))
-  const hours = Math.floor(totalSeconds / 3600)
-  const minutes = Math.floor((totalSeconds % 3600) / 60)
-  const seconds = totalSeconds % 60
-  return `${toTwoDigits(hours)}:${toTwoDigits(minutes)}:${toTwoDigits(seconds)}`
-}
-
-const formatPace = (paceMinutesPerKm: number) => {
-  const totalSeconds = Math.max(0, Math.round(paceMinutesPerKm * 60))
-  const minutes = Math.floor(totalSeconds / 60)
-  const seconds = totalSeconds % 60
-  return `${minutes}:${toTwoDigits(seconds)} min/km`
-}
 
 const referenceTimeTotalSeconds = computed(
   () =>
@@ -82,7 +65,7 @@ const calculate = () => {
     referenceTimeTotalSeconds.value,
     referenceDistanceKms.value,
     runnerStartDelayMinutes.value,
-    selectedExponent.value,
+    // selectedExponent.value,
   )
 }
 </script>
@@ -151,16 +134,12 @@ const calculate = () => {
         <div class="result-group">
           <div class="result-item-inner">
             <span class="result-label">Czas netto</span>
-            <strong class="result-value">{{
-              formatMinutesToClock(result.netRunnerTimeMinutes)
-            }}</strong>
+            <strong class="result-value">{{ formatMinutes(result.netRunnerTimeMinutes) }}</strong>
           </div>
           <div class="result-divider"></div>
           <div class="result-item-inner">
             <span class="result-label">Czas brutto</span>
-            <strong class="result-value">{{
-              formatMinutesToClock(result.grossRunnerTimeMinutes)
-            }}</strong>
+            <strong class="result-value">{{ formatMinutes(result.grossRunnerTimeMinutes) }}</strong>
           </div>
         </div>
       </div>
