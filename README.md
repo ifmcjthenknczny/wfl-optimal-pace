@@ -1,48 +1,87 @@
-# wings-for-life-optimal-pace
+# Wings for Life Optimal Pace
 
-This template should help get you started developing with Vue 3 in Vite.
+A web application built with Vue 3 and TypeScript that helps estimate the **optimal distance and pace** for the Wings for Life World Run.
 
-## Recommended IDE Setup
+The calculator compares:
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+* the runner’s predicted finish time (based on the Riegel model),
+* the catcher car catch-up time (based on staged speed schedule),
 
-## Recommended Browser Setup
+and finds the distance where the difference between those times is minimal.
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+## Features
 
-## Type Support for `.vue` Imports in TS
+* calculates the optimal distance with `1 meter` precision,
+* displays net time, gross time, and average pace,
+* uses a Riegel coefficient of `1.06` by default,
+* validates the form with `zod`,
+* displays results only after clicking `Calculate`,
+* UI is available in Polish.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+## How it works (short version)
 
-## Customize configuration
+1. The user provides a reference result (time + distance), start delay, and runner profile.
+2. The calculator estimates running times for different distances using the Riegel formula.
+3. For the same distances, it calculates the catcher car catch-up times.
+4. The algorithm iteratively narrows the search range (`1 -> 0.1 -> 0.01 -> 0.001 km`) and selects the best result.
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+## Run locally
 
-## Project Setup
+Requirements:
 
-```sh
+* Node.js `>=20`
+* Yarn (the project uses Yarn 4 / PnP)
+
+Install dependencies:
+
+```bash
 yarn
 ```
 
-### Compile and Hot-Reload for Development
+Development mode:
 
-```sh
+```bash
 yarn dev
 ```
 
-### Type-Check, Compile and Minify for Production
+Type check:
 
-```sh
+```bash
+yarn type-check
+```
+
+Production build:
+
+```bash
 yarn build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+Lint:
 
-```sh
+```bash
 yarn lint
 ```
+
+## Project structure
+
+* `src/components/calculation/CalculationComponent.vue` - form + result presentation
+* `src/components/calculation/optimize.ts` - optimal distance search algorithm
+* `src/components/calculation/riegel.ts` - Riegel model
+* `src/components/calculation/car.ts` - catcher car model
+* `src/components/CalculatorIntro.vue` - introduction and explanation
+
+## Notes
+
+This tool provides an estimation based on a mathematical model and the assumed catcher car schedule.
+Treat the result as planning support, not as a guarantee of the actual race outcome.
+
+## License
+
+This work is licensed under a [Creative Commons Attribution-NonCommercial 4.0 International License](https://creativecommons.org/licenses/by-nc/4.0/).
+
+## Contact
+
+For questions or feedback, please reach out via GitHub.
+[ifmcjthenknczny](https://github.com/ifmcjthenknczny)  
+
+Project Link: [https://github.com/ifmcjthenknczny/wfl-optimal-pace](https://github.com/ifmcjthenknczny/wfl-optimal-pace)
