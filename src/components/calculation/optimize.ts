@@ -1,6 +1,6 @@
 import calculateWflNetCatchTime from "./car";
 import { calculatePace } from "./helpers";
-import calculateRunnerTime from "./riegel";
+import calculateRunnerTime, { MIN_RIEGEL_EXPONENT } from "./riegel";
 
 type OptimalRunParams = {
     distanceKms: number;
@@ -14,6 +14,7 @@ type OptimalRunParams = {
 type CalculationContext = {
     baseValues: { timeSeconds: number; distanceKms: number };
     runnerStartDelayMinutes: number;
+    exponent: number;
 };
 
 const REFINEMENT_STEPS = [1, 0.1, 0.01, 0.001];
@@ -36,7 +37,7 @@ const scanRange = (
 
     for (let step = 0; step <= stepCount; step += 1) {
         const targetDistanceKms = roundDistance(startDistanceKms + step * stepKms);
-        const runnerTimeMinutes = calculateRunnerTime(baseValues, targetDistanceKms);
+        const runnerTimeMinutes = calculateRunnerTime(baseValues, targetDistanceKms, context.exponent);
         const netCatchTimeMinutes = calculateWflNetCatchTime(targetDistanceKms, runnerStartDelayMinutes);
 
         if (netCatchTimeMinutes === null) {
@@ -62,7 +63,8 @@ const scanRange = (
 const calculateOptimalRunParams = (
     refTimeSeconds: number,
     refDistanceKms: number,
-    runnerStartDelayMinutes: number
+    runnerStartDelayMinutes: number,
+    exponent: number = MIN_RIEGEL_EXPONENT
 ): OptimalRunParams | null => {
     if (refTimeSeconds <= 0 || refDistanceKms <= 0) {
         return null;
@@ -71,6 +73,7 @@ const calculateOptimalRunParams = (
     const context: CalculationContext = {
         baseValues: { timeSeconds: refTimeSeconds, distanceKms: refDistanceKms },
         runnerStartDelayMinutes: runnerStartDelayMinutes,
+        exponent
     };
     let bestResult: OptimalRunParams | null = null;
 
