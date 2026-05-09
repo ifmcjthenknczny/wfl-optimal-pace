@@ -3,9 +3,8 @@ type CatcherCarSchedule = {
   speedKmH: number
 }[]
 
-const calculateWflNetCatchTime = (
+const calculateWflCarCatchTime = (
   distanceKm: number,
-  runnerStartDelayMinutes: number,
 ): number | null => {
   if (distanceKm <= 0) {
     return 0
@@ -22,7 +21,7 @@ const calculateWflNetCatchTime = (
     { stageDurationMinutes: 180, speedKmH: 30 },
   ]
 
-  let netRunnerTimeMinutes = 30 - runnerStartDelayMinutes
+  let netRunnerTimeMinutes = 30
   let carDistanceKm = 0
 
   for (const stage of catcherCarSchedule) {
@@ -54,4 +53,4 @@ const calculateWflNetCatchTime = (
   return null
 }
 
-export default calculateWflNetCatchTime
+export default calculateWflCarCatchTime

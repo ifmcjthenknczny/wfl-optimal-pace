@@ -1,4 +1,4 @@
-import calculateWflNetCatchTime from './car'
+import calculateWflCarCatchTime from './car'
 import { calculatePace } from './helpers'
 import calculateRunnerTime, { MIN_RIEGEL_EXPONENT } from './riegel'
 
@@ -17,12 +17,13 @@ type CalculationContext = {
   exponent: number
 }
 
-const REFINEMENT_STEPS = [1, 0.1, 0.01, 0.001] as const
+const REFINEMENT_EXPONENTS = [0, -1, -2, -3]
+const REFINEMENT_STEPS = REFINEMENT_EXPONENTS.map((exponent) => 10**exponent)
 
-const MIN_DISTANCE_IN_KMS = 0
+const MIN_DISTANCE_IN_KMS = REFINEMENT_STEPS.at(-1)!
 const MAX_DISTANCE_IN_KMS = 100
 
-const roundDistance = (distanceKms: number) => Number(distanceKms.toFixed(2))
+const roundDistance = (distanceKms: number) => Number(distanceKms.toFixed(Math.abs(REFINEMENT_EXPONENTS.at(-1)!)))
 const clampDistance = (distanceKms: number) =>
   Math.min(MAX_DISTANCE_IN_KMS, Math.max(MIN_DISTANCE_IN_KMS, distanceKms))
 
@@ -42,20 +43,32 @@ const scanRange = (
 
   for (let step = 0; step <= stepCount; step += 1) {
     const targetDistanceKms = roundDistance(startDistanceKms + step * stepKms)
-    const runnerTimeMinutes = calculateRunnerTime(baseValues, targetDistanceKms, context.exponent)
-    const netCatchTimeMinutes = calculateWflNetCatchTime(targetDistanceKms, runnerStartDelayMinutes)
-
-    if (netCatchTimeMinutes === null) {
+    if (targetDistanceKms <= 0) {
       continue
     }
 
-    const diffMinutes = Math.abs(runnerTimeMinutes - netCatchTimeMinutes)
+    const runnerTimeMinutes = calculateRunnerTime(baseValues, targetDistanceKms, context.exponent)
+    const catchTimeMinutes = calculateWflCarCatchTime(targetDistanceKms)
+
+    if (
+      catchTimeMinutes === null ||
+      !isFinite(runnerTimeMinutes) ||
+      !isFinite(catchTimeMinutes)
+    ) {
+      continue
+    }
+
+    const diffMinutes = Math.abs(runnerTimeMinutes + runnerStartDelayMinutes - catchTimeMinutes)
+    if (!isFinite(diffMinutes)) {
+      continue
+    }
+
     if (bestResult === null || diffMinutes < bestResult.diffMinutes) {
       bestResult = {
         distanceKms: targetDistanceKms,
         diffMinutes,
         netRunnerTimeMinutes: runnerTimeMinutes,
-        grossRunnerTimeMinutes: netCatchTimeMinutes + runnerStartDelayMinutes,
+        grossRunnerTimeMinutes: catchTimeMinutes,
         avgPace: calculatePace(runnerTimeMinutes, targetDistanceKms),
         runnerStartDelayMinutes,
       }

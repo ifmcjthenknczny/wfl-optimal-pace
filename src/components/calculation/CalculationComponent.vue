@@ -99,31 +99,31 @@ const calculate = () => {
         <input v-model.number="referenceDistanceKms" type="number" min="0.1" step="0.1" />
       </label>
 
-      <label>
-        Opóźnienie startu (min)
-        <input v-model.number="runnerStartDelayMinutes" type="number" min="0" step="1" />
-      </label>
-
       <fieldset>
         <legend>Czas referencyjny</legend>
         <div class="time-grid">
           <label>
-            h
+            godziny
             <input v-model.number="referenceTimeHours" type="number" min="0" step="1" />
           </label>
           <label>
-            min
+            minuty
             <input v-model.number="referenceTimeMinutes" type="number" min="0" max="59" step="1" />
           </label>
           <label>
-            s
+            sekundy
             <input v-model.number="referenceTimeSeconds" type="number" min="0" max="59" step="1" />
           </label>
         </div>
       </fieldset>
 
       <label>
-        Doświadczenie biegacza
+        Opóźnienie startu biegacza (min)
+        <input v-model.number="runnerStartDelayMinutes" type="number" min="0" step="1" />
+      </label>
+
+      <label>
+        Doświadczenie biegacza na dystansach 10+ km
         <select v-model.number="selectedExponent">
           <option :value="1.06">Doświadczony (1.06)</option>
           <option :value="1.08">Średnio doświadczony (1.08)</option>
@@ -138,7 +138,7 @@ const calculate = () => {
 
     <div v-if="hasAttemptedCalculation && formIsValid && result" class="results">
       <h3>Wynik</h3>
-      <p><strong>Optymalny dystans:</strong> {{ result.distanceKms.toFixed(2) }} km</p>
+      <p><strong>Optymalny dystans:</strong> {{ result.distanceKms.toFixed(3) }} km</p>
       <p>
         <strong>Czas biegu netto:</strong> {{ formatMinutesToClock(result.netRunnerTimeMinutes) }}
       </p>
@@ -147,7 +147,6 @@ const calculate = () => {
         {{ formatMinutesToClock(result.grossRunnerTimeMinutes) }}
       </p>
       <p><strong>Średnie tempo:</strong> {{ formatPace(result.avgPace) }}</p>
-      <p><strong>Różnica runner-car:</strong> {{ result.diffMinutes.toFixed(2) }} min</p>
     </div>
   </section>
 </template>
@@ -182,12 +181,19 @@ label {
 
 input,
 select {
+  width: 100%;
+  min-width: 0;
   padding: 0.55rem 0.65rem;
   border: 1px solid var(--color-border);
   border-radius: 8px;
   font-size: 0.95rem;
   background: var(--color-background-mute);
   color: var(--color-text);
+}
+
+input[type='number'] {
+  appearance: auto;
+  -moz-appearance: auto;
 }
 
 fieldset {
@@ -203,8 +209,14 @@ legend {
 
 .time-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(90px, 1fr));
+  grid-template-columns: repeat(3, minmax(120px, 1fr));
   gap: 0.6rem;
+}
+
+@media (max-width: 640px) {
+  .time-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .results {
