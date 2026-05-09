@@ -21,7 +21,7 @@ const REFINEMENT_EXPONENTS = [0, -1, -2, -3]
 const REFINEMENT_STEPS = REFINEMENT_EXPONENTS.map((exponent) => 10 ** exponent)
 
 const MIN_DISTANCE_IN_KMS = REFINEMENT_STEPS.at(-1)!
-const MAX_DISTANCE_IN_KMS = 100
+const MAX_DISTANCE_IN_KMS = 150
 
 const roundDistance = (distanceKms: number) =>
   Number(distanceKms.toFixed(Math.abs(REFINEMENT_EXPONENTS.at(-1)!)))

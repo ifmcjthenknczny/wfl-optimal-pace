@@ -2,12 +2,13 @@
 import { computed, reactive, ref } from 'vue'
 import { z } from 'zod'
 import calculateOptimalRunParams from './optimize'
-import { formatTime, formatPace } from './helpers'
+import { formatTime, formatPace, calculatePace } from './helpers'
 
 // const selectedExponent = ref(MIN_RIEGEL_EXPONENT)
 
 const MIN_REASONABLE_DISTANCE_KMS = 1.5
 const MIN_REASONABLE_TIME_SECONDS = 3.5 * 60
+const MIN_REASONABLE_PACE = 2.25
 
 const formSchema = z
   .object({
@@ -39,13 +40,22 @@ const formSchema = z
         values.referenceTimeMinutes * 60 +
         values.referenceTimeSeconds >
       MIN_REASONABLE_TIME_SECONDS,
-    {
-      message: `Czas referencyjny musi być większy od najniższego mającego sens w obliczeniach - ${formatTime(MIN_REASONABLE_TIME_SECONDS)}.`,
-    },
+    `Czas referencyjny musi być większy od najniższego mającego sens w obliczeniach - ${formatTime(MIN_REASONABLE_TIME_SECONDS)}.`,
   )
-  .refine((values) => values.referenceDistanceKms > MIN_REASONABLE_DISTANCE_KMS, {
-    message: `Dystans referencyjny musi być większy od najniższego mającego sens w obliczeniach - ${MIN_REASONABLE_DISTANCE_KMS} minuty.`,
-  })
+  .refine(
+    (values) => values.referenceDistanceKms > MIN_REASONABLE_DISTANCE_KMS,
+    `Dystans referencyjny musi być większy od najniższego mającego sens w obliczeniach - ${MIN_REASONABLE_DISTANCE_KMS} minuty.`,
+  )
+  .refine(
+    (values) =>
+      calculatePace(
+        values.referenceTimeHours * 60 +
+          values.referenceTimeMinutes +
+          values.referenceTimeSeconds / 60,
+        values.referenceDistanceKms,
+      ) > MIN_REASONABLE_PACE,
+    'Nie ściemniaj XD',
+  )
 
 type FormState = z.infer<typeof formSchema>
 
