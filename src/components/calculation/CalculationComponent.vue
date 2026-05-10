@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { z } from 'zod'
 import calculateOptimalRunParams from './optimize'
 import { formatTime, formatPace, calculatePace } from './helpers'
+import {
+  WORLD_RECORDS,
+  type WorldRecordDistance,
+  MIN_REASONABLE_DISTANCE_KMS,
+  MIN_REASONABLE_PACE,
+  MIN_REASONABLE_TIME_SECONDS,
+} from './boundaries'
 
 // const selectedExponent = ref(MIN_RIEGEL_EXPONENT)
-
-const MIN_REASONABLE_DISTANCE_KMS = 1.5
-const MIN_REASONABLE_TIME_SECONDS = 3.5 * 60
-const MIN_REASONABLE_PACE = 2.25
 
 const formSchema = z
   .object({
@@ -46,29 +49,58 @@ const formSchema = z
     (values) => values.referenceDistanceKms > MIN_REASONABLE_DISTANCE_KMS,
     `Dystans referencyjny musi być większy od najniższego mającego sens w obliczeniach - ${MIN_REASONABLE_DISTANCE_KMS} minuty.`,
   )
-  .refine(
-    (values) =>
-      calculatePace(
-        values.referenceTimeHours * 60 +
-          values.referenceTimeMinutes +
-          values.referenceTimeSeconds / 60,
-        values.referenceDistanceKms,
-      ) > MIN_REASONABLE_PACE,
-    'Nie ściemniaj XD',
-  )
+  .refine((values) => {
+    const totalMinutes =
+      values.referenceTimeHours * 60 +
+      values.referenceTimeMinutes +
+      values.referenceTimeSeconds / 60
+
+    const userPace = calculatePace(totalMinutes, values.referenceDistanceKms)
+
+    if (userPace < MIN_REASONABLE_PACE) return false
+
+    const distances = Object.keys(WORLD_RECORDS)
+      .map(Number)
+      .sort((a, b) => b - a)
+
+    const matchedDistance = distances.find((d) => values.referenceDistanceKms >= d)
+
+    if (matchedDistance) {
+      const wrTime = WORLD_RECORDS[matchedDistance as WorldRecordDistance]
+      const wrPace = wrTime / matchedDistance
+
+      const ultraHumanPace = wrPace * 0.97
+
+      if (userPace < ultraHumanPace) {
+        return false
+      }
+    }
+
+    return true
+  }, 'Nie ściemniaj XD')
 
 type FormState = z.infer<typeof formSchema>
 
-const formState = reactive<FormState>({
+const DEFAULT_FORM_STATE: FormState = {
   referenceDistanceKms: 10,
   referenceTimeHours: 0,
   referenceTimeMinutes: 50,
   referenceTimeSeconds: 0,
   runnerStartDelayMinutes: 0,
-})
+}
+
+const formState = reactive<FormState>(DEFAULT_FORM_STATE)
 
 const hasAttemptedCalculation = ref(false)
 const result = ref<ReturnType<typeof calculateOptimalRunParams>>(null)
+
+watch(
+  () => formState,
+  () => {
+    hasAttemptedCalculation.value = false
+  },
+  { deep: true },
+)
 
 const referenceTimeTotalSeconds = computed(
   () =>
@@ -77,19 +109,18 @@ const referenceTimeTotalSeconds = computed(
     formState.referenceTimeSeconds,
 )
 
-const validationResult = computed(() => formSchema.safeParse(formState))
-
-const formIsValid = computed(() => validationResult.value.success)
-const validationMessage = computed(() =>
-  validationResult.value.success
-    ? ''
-    : (validationResult.value.error.issues[0]?.message ?? 'Uzupełnij poprawnie wszystkie pola.'),
-)
+const formIsValid = ref(false)
+const validationError = ref<string | null>(null)
 
 const calculate = () => {
   hasAttemptedCalculation.value = true
 
-  if (!formIsValid.value) {
+  const validationResult = formSchema.safeParse(formState)
+  formIsValid.value = validationResult.success
+
+  if (!formIsValid.value && validationResult.error) {
+    validationError.value =
+      validationResult.error.issues[0]?.message ?? 'Uzupełnij poprawnie wszystkie pola.'
     result.value = null
     return
   }
@@ -158,9 +189,9 @@ const calculate = () => {
       <button class="calculate-button" type="button" @click="calculate">Oblicz</button>
     </div>
 
-    <p v-if="hasAttemptedCalculation && !formIsValid" class="error">{{ validationMessage }}</p>
+    <p v-if="hasAttemptedCalculation && !formIsValid" class="error">{{ validationError }}</p>
 
-    <div v-if="hasAttemptedCalculation && result" class="results">
+    <div v-if="result" class="results">
       <div class="results-header">
         <h3>Wynik obliczeń:</h3>
       </div>
