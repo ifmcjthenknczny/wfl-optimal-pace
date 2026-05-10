@@ -173,7 +173,7 @@ const calculate = () => {
       </fieldset>
 
       <label>
-        Opóźnienie startu biegacza na Wings For Life [min]
+        Opóźnienie startu na Wings For Life [min]
         <input v-model.number="formState.runnerStartDelayMinutes" type="number" min="0" step="1" />
       </label>
 
@@ -246,7 +246,9 @@ const calculate = () => {
 }
 
 label {
-  display: grid;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
   gap: 0.35rem;
   font-weight: 600;
 }
@@ -421,6 +423,10 @@ legend {
 
   .time-grid {
     grid-template-columns: repeat(3, minmax(120px, 1fr));
+  }
+
+  label {
+    display: grid;
   }
 }
 </style>
