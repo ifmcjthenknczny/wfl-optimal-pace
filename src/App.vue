@@ -24,11 +24,13 @@ header {
 
 main {
   margin-top: 2rem;
+  margin-bottom: 1.5rem;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 641px) {
   main {
     margin-top: 0;
+    margin-bottom: 4rem;
   }
 
   header {

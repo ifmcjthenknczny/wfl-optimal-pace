@@ -146,7 +146,7 @@ const calculate = () => {
 
 <template>
   <div class="form-grid">
-    <label>
+    <label class="label">
       Dystans zawodów [km]
       <input v-model="formState.referenceDistanceKms" type="text" />
     </label>
@@ -154,21 +154,21 @@ const calculate = () => {
     <fieldset>
       <legend>Wynik na zawodach (czas netto)</legend>
       <div class="form-time-grid">
-        <label
+        <label class="unit-label"
           >[h] <input v-model.number="formState.referenceTimeHours" type="number" min="0"
         /></label>
-        <label
+        <label class="unit-label"
           >[min]
           <input v-model.number="formState.referenceTimeMinutes" type="number" min="0" max="59"
         /></label>
-        <label
+        <label class="unit-label"
           >[s]
           <input v-model.number="formState.referenceTimeSeconds" type="number" min="0" max="59"
         /></label>
       </div>
     </fieldset>
 
-    <label>
+    <label class="label">
       Opóźnienie startu na Wings For Life [min]
       <input v-model="formState.runnerStartDelayMinutes" type="text" min="0" />
     </label>
@@ -187,10 +187,17 @@ const calculate = () => {
 
 label {
   display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
   gap: 0.35rem;
   font-weight: 600;
+}
+
+.label {
+  flex-direction: column;
+}
+
+.unit-label {
+  flex-direction: row-reverse;
+  align-items: center;
 }
 
 input,
