@@ -10,4 +10,6 @@ export const WORLD_RECORDS = {
   42.195: 1 * 60 + 59 + 30 / 60,
 } as const
 
+export const ULTRA_HUMAN_COEFFICIENT = 1.03
+
 export type WorldRecordDistance = keyof typeof WORLD_RECORDS

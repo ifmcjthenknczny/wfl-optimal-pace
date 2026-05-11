@@ -1,5 +1,5 @@
 import calculateWflCarCatchTime from './car'
-import { calculatePace } from './helpers'
+import { calculatePace } from '../helpers'
 import calculateRunnerTime, { MIN_RIEGEL_EXPONENT } from './riegel'
 
 type OptimalRunParams = {

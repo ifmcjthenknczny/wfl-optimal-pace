@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CalculatorIntro from './components/intro/CalculatorIntro.vue'
+import CalculatorIntro from './components/calculation/intro/CalculationIntro.vue'
 import FooterComponent from './components/footer/FooterComponent.vue'
 import CalculationComponent from './components/calculation/CalculationComponent.vue'
 </script>
