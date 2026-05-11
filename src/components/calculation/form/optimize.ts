@@ -1,6 +1,12 @@
-import calculateWflCarCatchTime from './car'
+import calculateWflCarCatchTime from '../car'
 import { calculatePace } from '../helpers'
-import calculateRunnerTime, { MIN_RIEGEL_EXPONENT } from './riegel'
+import calculateRunnerTime, { DEFAULT_RIEGEL_EXPONENT } from '../riegel'
+import {
+  REFINEMENT_STEPS,
+  MIN_DISTANCE_IN_KMS,
+  MAX_DISTANCE_IN_KMS,
+  REFINEMENT_EXPONENTS,
+} from '../const'
 
 type OptimalRunParams = {
   distanceKms: number
@@ -16,12 +22,6 @@ type CalculationContext = {
   runnerStartDelayMinutes: number
   exponent: number
 }
-
-const REFINEMENT_EXPONENTS = [0, -1, -2, -3]
-const REFINEMENT_STEPS = REFINEMENT_EXPONENTS.map((exponent) => 10 ** exponent)
-
-const MIN_DISTANCE_IN_KMS = REFINEMENT_STEPS.at(-1)!
-const MAX_DISTANCE_IN_KMS = 150
 
 const roundDistance = (distanceKms: number) =>
   Number(distanceKms.toFixed(Math.abs(REFINEMENT_EXPONENTS.at(-1)!)))
@@ -79,7 +79,7 @@ const calculateOptimalRunParams = (
   refTimeSeconds: number,
   refDistanceKms: number,
   runnerStartDelayMinutes: number,
-  exponent: number = MIN_RIEGEL_EXPONENT,
+  exponent: number = DEFAULT_RIEGEL_EXPONENT,
 ): OptimalRunParams | null => {
   if (refTimeSeconds <= 0 || refDistanceKms <= 0) {
     return null

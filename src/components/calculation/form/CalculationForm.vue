@@ -11,9 +11,12 @@ import {
   MIN_REASONABLE_TIME_SECONDS,
   ULTRA_HUMAN_COEFFICIENT,
 } from './boundaries'
+import { gatherChartData } from '../chart/chartData'
+import { DEFAULT_RIEGEL_EXPONENT } from '../riegel'
 
 const emit = defineEmits<{
   (e: 'calculated', result: ReturnType<typeof calculateOptimalRunParams> | null): void
+  (e: 'gathered', data: ReturnType<typeof gatherChartData> | null): void
 }>()
 
 const formSchema = z
@@ -84,6 +87,7 @@ watch(
   () => {
     hasAttemptedCalculation.value = false
     emit('calculated', null)
+    emit('gathered', null)
   },
   { deep: true },
 )
@@ -103,12 +107,27 @@ const calculate = () => {
     formState.referenceTimeMinutes * 60 +
     formState.referenceTimeSeconds
 
-  const result = calculateOptimalRunParams(
+  const optimizedResult = calculateOptimalRunParams(
     totalSeconds,
     formState.referenceDistanceKms,
     formState.runnerStartDelayMinutes,
+    DEFAULT_RIEGEL_EXPONENT,
   )
-  emit('calculated', result)
+  emit('calculated', optimizedResult)
+
+  if (optimizedResult) {
+    const maxDistance = optimizedResult.distanceKms * 1.8
+    const chartData = gatherChartData(
+      {
+        timeSeconds: totalSeconds,
+        distanceKms: formState.referenceDistanceKms,
+        startDelayMinutes: formState.runnerStartDelayMinutes,
+      },
+      maxDistance,
+      DEFAULT_RIEGEL_EXPONENT,
+    )
+    emit('gathered', chartData)
+  }
 }
 </script>
 

@@ -3,18 +3,30 @@ import { ref } from 'vue'
 import CalculationForm from './form/CalculationForm.vue'
 import CalculationResult from './result/CalculationResult.vue'
 import calculateOptimalRunParams from './form/optimize'
+import type { gatherChartData } from './chart/chartData'
+import CalculationChart from './chart/CalculationChart.vue'
 
 const calculationResult = ref<ReturnType<typeof calculateOptimalRunParams> | null>(null)
+const chartData = ref<ReturnType<typeof gatherChartData> | null>(null)
 
 const handleResult = (result: ReturnType<typeof calculateOptimalRunParams> | null) => {
   calculationResult.value = result
+}
+
+const handleChartData = (data: ReturnType<typeof gatherChartData> | null) => {
+  chartData.value = data
 }
 </script>
 
 <template>
   <section class="calculator-card">
-    <CalculationForm @calculated="handleResult" />
+    <CalculationForm @calculated="handleResult" @gathered="handleChartData" />
     <CalculationResult v-if="calculationResult" :result="calculationResult" />
+    <CalculationChart
+      v-if="chartData"
+      :car-points="chartData.carPoints"
+      :runner-points="chartData.runnerPoints"
+    />
   </section>
 </template>
 
