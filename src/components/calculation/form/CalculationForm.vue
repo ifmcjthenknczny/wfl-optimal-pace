@@ -19,12 +19,16 @@ const emit = defineEmits<{
   (e: 'gathered', data: ReturnType<typeof gatherChartData> | null): void
 }>()
 
+const replaceCommaByDot = (num: number): number => {
+  return +num.toString().replace(',', '.')
+}
+
 const formSchema = z
   .object({
     referenceDistanceKms: z
       .number('Wpisz dystans jako liczbę')
       .positive('Dystans musi być większy niż 0 km'),
-    referenceTimeHours: z.number().min(0, 'Godziny nie mogą być ujemne'),
+    referenceTimeHours: z.number().int().min(0, 'Godziny nie mogą być ujemne'),
     referenceTimeMinutes: z.number().int().min(0).max(59),
     referenceTimeSeconds: z.number().int().min(0).max(59),
     runnerStartDelayMinutes: z.number().min(0, 'Opóźnienie nie może być ujemne'),
@@ -92,9 +96,18 @@ watch(
   { deep: true },
 )
 
+const mapFormData = (formState: FormState): FormState => {
+  return {
+    ...formState,
+    referenceDistanceKms: replaceCommaByDot(formState.referenceDistanceKms),
+    runnerStartDelayMinutes: replaceCommaByDot(formState.runnerStartDelayMinutes),
+  }
+}
+
 const calculate = () => {
   hasAttemptedCalculation.value = true
-  const validationResult = formSchema.safeParse(formState)
+  const mappedFormState = mapFormData(formState)
+  const validationResult = formSchema.safeParse(mappedFormState)
   formIsValid.value = validationResult.success
 
   if (!validationResult.success) {
@@ -103,14 +116,14 @@ const calculate = () => {
   }
 
   const totalSeconds =
-    formState.referenceTimeHours * 3600 +
-    formState.referenceTimeMinutes * 60 +
-    formState.referenceTimeSeconds
+    mappedFormState.referenceTimeHours * 3600 +
+    mappedFormState.referenceTimeMinutes * 60 +
+    mappedFormState.referenceTimeSeconds
 
   const optimizedResult = calculateOptimalRunParams(
     totalSeconds,
-    formState.referenceDistanceKms,
-    formState.runnerStartDelayMinutes,
+    mappedFormState.referenceDistanceKms,
+    mappedFormState.runnerStartDelayMinutes,
     DEFAULT_RIEGEL_EXPONENT,
   )
   emit('calculated', optimizedResult)
@@ -120,8 +133,8 @@ const calculate = () => {
     const chartData = gatherChartData(
       {
         timeSeconds: totalSeconds,
-        distanceKms: formState.referenceDistanceKms,
-        startDelayMinutes: formState.runnerStartDelayMinutes,
+        distanceKms: mappedFormState.referenceDistanceKms,
+        startDelayMinutes: mappedFormState.runnerStartDelayMinutes,
       },
       maxDistance,
       DEFAULT_RIEGEL_EXPONENT,
@@ -135,7 +148,7 @@ const calculate = () => {
   <div class="form-grid">
     <label>
       Dystans zawodów [km]
-      <input v-model.number="formState.referenceDistanceKms" type="number" min="0.1" step="0.1" />
+      <input v-model="formState.referenceDistanceKms" type="text" />
     </label>
 
     <fieldset>
@@ -157,7 +170,7 @@ const calculate = () => {
 
     <label>
       Opóźnienie startu na Wings For Life [min]
-      <input v-model.number="formState.runnerStartDelayMinutes" type="number" min="0" />
+      <input v-model="formState.runnerStartDelayMinutes" type="text" min="0" />
     </label>
 
     <button class="form-calculate-button" type="button" @click="calculate">Oblicz</button>
@@ -211,7 +224,6 @@ legend {
 .form-time-grid {
   display: grid;
   grid-template-columns: 1fr;
-
   gap: 0.6rem;
   text-align: right;
 }
