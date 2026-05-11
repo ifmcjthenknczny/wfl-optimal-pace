@@ -3,6 +3,7 @@ import { onMounted, ref, watch } from 'vue'
 import Chart from 'chart.js/auto'
 import { type ChartDataPoint } from './chartData'
 import { formatTime } from '../helpers'
+import { MOBILE_BREAKPOINT_PX } from '../const'
 
 const props = defineProps<{
   carPoints: ChartDataPoint[]
@@ -13,31 +14,40 @@ const chartCanvas = ref<HTMLCanvasElement | null>(null)
 let chartInstance: Chart | null = null
 
 const createChart = () => {
-  if (!chartCanvas.value) return
+  if (!chartCanvas.value) {
+    return
+  }
+  const isMobile = window.innerWidth < MOBILE_BREAKPOINT_PX
+
+  const lineOptions = {
+    borderWidth: isMobile ? 2 : 3,
+    pointRadius: 0,
+    pointHitRadius: 10,
+    tension: 0.1,
+  }
+
+  const gridOptions = {
+    display: true,
+    color: 'rgba(255, 255, 255, 0.1)',
+  }
 
   chartInstance = new Chart(chartCanvas.value, {
     type: 'line',
     data: {
       datasets: [
         {
-          label: 'Dystans Biegacza (km)',
+          label: isMobile ? 'Dystans Biegacza (km)' : 'Biegacz',
           data: props.runnerPoints,
           borderColor: '#2f8f6b',
           backgroundColor: '#2f8f6b',
-          borderWidth: 3,
-          pointRadius: 0,
-          pointHitRadius: 10,
-          tension: 0.1,
+          ...lineOptions,
         },
         {
-          label: 'Dystans Samochodu (km)',
+          label: isMobile ? 'Dystans Samochodu (km)' : 'Samochód',
           data: props.carPoints,
           borderColor: '#eb4034',
           backgroundColor: '#eb4034',
-          borderWidth: 3,
-          pointRadius: 0,
-          pointHitRadius: 10,
-          tension: 0.1,
+          ...lineOptions,
         },
       ],
     },
@@ -52,6 +62,7 @@ const createChart = () => {
         legend: {
           display: true,
           position: 'top',
+          onClick: () => {},
         },
         tooltip: {
           enabled: true,
@@ -75,10 +86,7 @@ const createChart = () => {
           type: 'linear',
           min: 0,
           max: Math.floor(props.carPoints.at(-1)!.x / 10) * 10,
-          grid: {
-            display: true,
-            color: 'rgba(255, 255, 255, 0.1)',
-          },
+          grid: gridOptions,
           title: {
             display: true,
             text: 'Czas [min]',
@@ -90,12 +98,9 @@ const createChart = () => {
         y: {
           beginAtZero: true,
           min: 0,
-          grid: {
-            display: true,
-            color: 'rgba(255, 255, 255, 0.1)',
-          },
+          grid: gridOptions,
           title: {
-            display: true,
+            display: !isMobile,
             text: 'Dystans [km]',
           },
         },
@@ -130,9 +135,14 @@ watch(
   height: 400px;
   width: 100%;
   margin-top: 1.5rem;
-  padding: 1rem;
   background: var(--color-background-soft);
   border-radius: 12px;
   border: 1px solid var(--color-border);
+}
+
+@media (min-width: 641px) {
+  .chart-wrapper {
+    padding: 1rem;
+  }
 }
 </style>
