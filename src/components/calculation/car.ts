@@ -9,6 +9,7 @@ const calculateWflCarCatchTime = (distanceKm: number): number | null => {
   }
 
   const catcherCarSchedule: CatcherCarSchedule = [
+    { stageDurationMinutes: 30, speedKmH: 0 },
     { stageDurationMinutes: 30, speedKmH: 14 },
     { stageDurationMinutes: 30, speedKmH: 15 },
     { stageDurationMinutes: 30, speedKmH: 16 },
@@ -16,10 +17,11 @@ const calculateWflCarCatchTime = (distanceKm: number): number | null => {
     { stageDurationMinutes: 30, speedKmH: 18 },
     { stageDurationMinutes: 30, speedKmH: 22 },
     { stageDurationMinutes: 30, speedKmH: 26 },
-    { stageDurationMinutes: 180, speedKmH: 30 },
+    { stageDurationMinutes: 30, speedKmH: 30 },
+    { stageDurationMinutes: 180, speedKmH: 34 },
   ]
 
-  let netRunnerTimeMinutes = 30
+  let carTimeMinutes = 0
   let carDistanceKm = 0
 
   for (const stage of catcherCarSchedule) {
@@ -31,12 +33,12 @@ const calculateWflCarCatchTime = (distanceKm: number): number | null => {
         return null
       }
       const stageTimeNeededMinutes = (stageDistanceNeeded / stage.speedKmH) * 60.0
-      netRunnerTimeMinutes += stageTimeNeededMinutes
-      return netRunnerTimeMinutes
+      carTimeMinutes += stageTimeNeededMinutes
+      return carTimeMinutes
     }
 
     carDistanceKm += stageDistance
-    netRunnerTimeMinutes += stage.stageDurationMinutes
+    carTimeMinutes += stage.stageDurationMinutes
   }
 
   const lastSpeed = catcherCarSchedule[catcherCarSchedule.length - 1]!.speedKmH
@@ -44,8 +46,8 @@ const calculateWflCarCatchTime = (distanceKm: number): number | null => {
 
   if (lastSpeed > 0) {
     const additionalTimeMinutes = (remainingDistance / lastSpeed) * 60.0
-    netRunnerTimeMinutes += additionalTimeMinutes
-    return netRunnerTimeMinutes
+    carTimeMinutes += additionalTimeMinutes
+    return carTimeMinutes
   }
 
   return null
