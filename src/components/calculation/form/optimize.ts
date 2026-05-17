@@ -6,7 +6,7 @@ import {
   MIN_DISTANCE_IN_KMS,
   MAX_DISTANCE_IN_KMS,
   REFINEMENT_EXPONENTS,
-} from '../const'
+} from '../../../config'
 
 type OptimalRunParams = {
   distanceKms: number

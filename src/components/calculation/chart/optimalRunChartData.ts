@@ -1,13 +1,9 @@
 import calculateWflCarCatchTime from '../car'
-import { MAX_DISTANCE_IN_KMS } from '../const'
+import { MAX_DISTANCE_IN_KMS } from '../../../config'
 import calculateRunnerTime, { DEFAULT_RIEGEL_EXPONENT, type RunnerBaseValues } from '../riegel'
+import { type ChartDataPoint } from './types'
 
-const CHART_ACCURACY_KM = 0.1
-
-export interface ChartDataPoint {
-  x: number // time in minutes
-  y: number // distance in kms
-}
+const DATA_ACCURACY_KM = 0.1
 
 const addChartEntry = (points: {carPoints: ChartDataPoint[], runnerPoints: ChartDataPoint[]}, runnerBaseValues: RunnerBaseValues & { startDelayMinutes: number }, distanceKms: number, exponent: number = DEFAULT_RIEGEL_EXPONENT) => {
   const carTime = calculateWflCarCatchTime(distanceKms)
@@ -19,7 +15,7 @@ const addChartEntry = (points: {carPoints: ChartDataPoint[], runnerPoints: Chart
   points.runnerPoints.push({ x: runnerTime + runnerBaseValues.startDelayMinutes, y: distanceKms })
 }
 
-export const gatherChartData = (
+export const gatherOptimalRunChartData = (
   runnerBaseValues: RunnerBaseValues & { startDelayMinutes: number },
   optimalDistance: number,
   exponent: number = DEFAULT_RIEGEL_EXPONENT,
@@ -41,11 +37,11 @@ export const gatherChartData = (
   ]
 
   for (
-    let distanceKms = CHART_ACCURACY_KM;
+    let distanceKms = DATA_ACCURACY_KM;
     distanceKms <= maxDistanceKms;
-    distanceKms += CHART_ACCURACY_KM
+    distanceKms += DATA_ACCURACY_KM
   ) {
-    const shouldAddOptimalResultThisIteration = optimalDistance > distanceKms - CHART_ACCURACY_KM && optimalDistance < distanceKms && Math.abs(optimalDistance - distanceKms) > 1e-6;
+    const shouldAddOptimalResultThisIteration = optimalDistance > distanceKms - DATA_ACCURACY_KM && optimalDistance < distanceKms && Math.abs(optimalDistance - distanceKms) > 1e-6;
     if (shouldAddOptimalResultThisIteration) {
       addChartEntry({carPoints, runnerPoints}, runnerBaseValues, optimalDistance, exponent)
     }

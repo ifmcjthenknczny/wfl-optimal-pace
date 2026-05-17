@@ -4,12 +4,12 @@ export const calculatePace = (timeMinutes: number, distanceKms: number) => {
 
 const toTwoDigits = (value: number) => (value < 10 ? `0${value}` : `${value}`)
 
-export const formatTime = (timeMinutes: number) => {
+export const formatTime = (timeMinutes: number, showEmptyHours: boolean = true) => {
   const totalSeconds = Math.max(0, Math.round(timeMinutes * 60))
   const hours = Math.floor(totalSeconds / 3600)
   const minutes = Math.floor((totalSeconds % 3600) / 60)
   const seconds = totalSeconds % 60
-  return `${toTwoDigits(hours)}:${toTwoDigits(minutes)}:${toTwoDigits(seconds)}`
+  return `${!showEmptyHours && hours === 0 ? '' : `${toTwoDigits(hours)}:`}${toTwoDigits(minutes)}:${toTwoDigits(seconds)}`
 }
 
 export const formatPace = (paceMinutesPerKm: number) => {

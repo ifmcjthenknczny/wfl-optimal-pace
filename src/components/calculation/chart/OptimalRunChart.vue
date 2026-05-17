@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import Chart from 'chart.js/auto'
-import { type ChartDataPoint } from './chartData'
 import { formatTime } from '../helpers'
-import { MOBILE_BREAKPOINT_PX } from '../const'
+import { MOBILE_BREAKPOINT_PX } from '../../../config'
+import { type ChartDataPoint } from './types'
+
+// TODO: deduplicate chart component
 
 const props = defineProps<{
   carPoints: ChartDataPoint[]

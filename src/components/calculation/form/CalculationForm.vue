@@ -11,17 +11,21 @@ import {
   MIN_REASONABLE_TIME_SECONDS,
   ULTRA_HUMAN_COEFFICIENT,
 } from './boundaries'
-import { gatherChartData } from '../chart/chartData'
+import { gatherOptimalRunChartData } from '../chart/optimalRunChartData'
 import { DEFAULT_RIEGEL_EXPONENT } from '../riegel'
+import { gatherStartDelayChartData } from '../chart/startDelayChart'
 
 const emit = defineEmits<{
   (e: 'calculated', result: ReturnType<typeof calculateOptimalRunParams> | null): void
-  (e: 'gathered', data: ReturnType<typeof gatherChartData> | null): void
+  (e: 'gathered', data: ReturnType<typeof gatherOptimalRunChartData> | null): void
+  (e: 'gatheredStartDelay', data: ReturnType<typeof gatherStartDelayChartData> | null): void
 }>()
 
 const replaceCommaByDot = (num: number): number => {
   return +num.toString().replace(',', '.')
 }
+
+// TODO: form errors mapper to separate file
 
 const formSchema = z
   .object({
@@ -75,10 +79,10 @@ const formSchema = z
 type FormState = z.infer<typeof formSchema>
 
 const formState = reactive<FormState>({
-  referenceDistanceKms: 10,
-  referenceTimeHours: 0,
-  referenceTimeMinutes: 50,
-  referenceTimeSeconds: 0,
+  referenceDistanceKms: 42.195,
+  referenceTimeHours: 1,
+  referenceTimeMinutes: 59,
+  referenceTimeSeconds: 30,
   runnerStartDelayMinutes: 0,
 })
 
@@ -92,6 +96,7 @@ watch(
     hasAttemptedCalculation.value = false
     emit('calculated', null)
     emit('gathered', null)
+    emit('gatheredStartDelay', null)
   },
   { deep: true },
 )
@@ -129,7 +134,7 @@ const calculate = () => {
   emit('calculated', optimizedResult)
 
   if (optimizedResult) {
-    const chartData = gatherChartData(
+    const optimalRunChartData = gatherOptimalRunChartData(
       {
         timeSeconds: totalSeconds,
         distanceKms: mappedFormState.referenceDistanceKms,
@@ -138,7 +143,13 @@ const calculate = () => {
       optimizedResult.distanceKms,
       DEFAULT_RIEGEL_EXPONENT,
     )
-    emit('gathered', chartData)
+    emit('gathered', optimalRunChartData)
+
+    const startDelayChartData = gatherStartDelayChartData({
+      timeSeconds: totalSeconds,
+      distanceKms: mappedFormState.referenceDistanceKms
+    }, DEFAULT_RIEGEL_EXPONENT)
+    emit('gatheredStartDelay', startDelayChartData)
   }
 }
 </script>

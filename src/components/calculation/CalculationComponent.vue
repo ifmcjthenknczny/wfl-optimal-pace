@@ -3,38 +3,47 @@ import { ref } from 'vue'
 import CalculationForm from './form/CalculationForm.vue'
 import CalculationResult from './result/CalculationResult.vue'
 import calculateOptimalRunParams from './form/optimize'
-import type { gatherChartData } from './chart/chartData'
-import CalculationChart from './chart/CalculationChart.vue'
+import type { gatherOptimalRunChartData } from './chart/optimalRunChartData'
+import OptimalRunChart from './chart/OptimalRunChart.vue'
 import CalculationSlider from './CalculationSlider.vue'
 import SlideWrapper from '../slide/SlideWrapper.vue'
-
-// TODO: create chart delay time (x) - optimal distance (y)
+import StartDelayChart from './chart/startDelayChart.vue'
+import type { gatherStartDelayChartData } from './chart/startDelayChart'
 
 const calculationResult = ref<ReturnType<typeof calculateOptimalRunParams> | null>(null)
-const chartData = ref<ReturnType<typeof gatherChartData> | null>(null)
+const optimalRunChartData = ref<ReturnType<typeof gatherOptimalRunChartData> | null>(null)
+const startDelayChartData = ref<ReturnType<typeof gatherStartDelayChartData> | null>(null)
+
 
 const handleResult = (result: ReturnType<typeof calculateOptimalRunParams> | null) => {
   calculationResult.value = result
 }
 
-const handleChartData = (data: ReturnType<typeof gatherChartData> | null) => {
-  chartData.value = data
+const handleOptimalRunChartData = (data: ReturnType<typeof gatherOptimalRunChartData> | null) => {
+  optimalRunChartData.value = data
+}
+
+const handleStartDelayChartData = (data: ReturnType<typeof gatherStartDelayChartData> | null) => {
+  startDelayChartData.value = data
 }
 </script>
 
 <template>
   <section class="calculator-card">
-    <CalculationForm @calculated="handleResult" @gathered="handleChartData" />
-    <CalculationSlider v-if="calculationResult || chartData">
+    <CalculationForm @calculated="handleResult" @gathered="handleOptimalRunChartData" @gathered-start-delay="handleStartDelayChartData" />
+    <CalculationSlider v-if="calculationResult || optimalRunChartData">
       <SlideWrapper>
         <CalculationResult v-if="calculationResult" :result="calculationResult" />
       </SlideWrapper>
       <SlideWrapper>
-        <CalculationChart
-          v-if="chartData"
-          :car-points="chartData.carPoints"
-          :runner-points="chartData.runnerPoints"
+        <OptimalRunChart
+          v-if="optimalRunChartData"
+          :car-points="optimalRunChartData.carPoints"
+          :runner-points="optimalRunChartData.runnerPoints"
         />
+      </SlideWrapper>
+      <SlideWrapper>
+        <StartDelayChart v-if="startDelayChartData" :points="startDelayChartData.points" />
       </SlideWrapper>
     </CalculationSlider>
   </section>
