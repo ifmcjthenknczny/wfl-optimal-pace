@@ -36,14 +36,14 @@ const createChart = () => {
     data: {
       datasets: [
         {
-          label: isMobile ? 'Dystans Biegacza (km)' : 'Biegacz',
+          label: 'Biegacz',
           data: props.runnerPoints,
           borderColor: '#2f8f6b',
           backgroundColor: '#2f8f6b',
           ...lineOptions,
         },
         {
-          label: isMobile ? 'Dystans Samochodu (km)' : 'Samochód',
+          label: 'Samochód',
           data: props.carPoints,
           borderColor: '#eb4034',
           backgroundColor: '#eb4034',
@@ -55,7 +55,7 @@ const createChart = () => {
       responsive: true,
       maintainAspectRatio: false,
       interaction: {
-        mode: 'nearest',
+        mode: 'index',
         intersect: false,
       },
       plugins: {
@@ -70,14 +70,13 @@ const createChart = () => {
           backgroundColor: 'rgba(28, 28, 28, 0.9)',
           callbacks: {
             title: (items) => {
-              const time = items[0]?.parsed.x
-              return `Czas: ${formatTime(time ?? 0)}`
+              const distance = items[0]?.parsed.y
+              return `Dystans: ${distance?.toFixed(3)} km`
             },
             label: (context) => {
-              const label = context.dataset.label
-              const distance = context.parsed.y
-              return ` ${label}: ${distance?.toFixed(3)} km`
-            },
+              const time = context.parsed.x
+              return `Czas: ${formatTime(time ?? 0)}`
+            }
           },
         },
       },

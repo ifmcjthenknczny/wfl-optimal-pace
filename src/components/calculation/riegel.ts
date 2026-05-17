@@ -7,8 +7,6 @@ export type RunnerBaseValues = {
   distanceKms: number
 }
 
-// TODO: reverse calculation - distance from time - for better chart
-
 const calculateRunnerTime = (
   { timeSeconds, distanceKms }: RunnerBaseValues,
   targetDistanceKms: number,

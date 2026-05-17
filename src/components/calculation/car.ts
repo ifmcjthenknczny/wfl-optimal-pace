@@ -3,8 +3,6 @@ type CatcherCarSchedule = {
   speedKmH: number
 }[]
 
-// TODO: reverse calculation - distance from time - for better chart
-
 const calculateWflCarCatchTime = (distanceKm: number): number | null => {
   if (distanceKm <= 0) {
     return 0
