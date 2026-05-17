@@ -3,7 +3,7 @@ import { onMounted, ref, watch } from 'vue'
 import Chart from 'chart.js/auto'
 import { formatTime } from '../helpers'
 import { MOBILE_BREAKPOINT_PX } from '../../../config'
-import { MAX_DELAY_TIME_MINUTES } from './startDelayChart'
+import { MAX_DELAY_TIME_MINUTES } from './startDelayChartData'
 import { type ChartDataPoint } from './types'
 
 // TODO: deduplicate chart component

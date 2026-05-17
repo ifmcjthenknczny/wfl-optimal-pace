@@ -13,7 +13,7 @@ import {
 } from './boundaries'
 import { gatherOptimalRunChartData } from '../chart/optimalRunChartData'
 import { DEFAULT_RIEGEL_EXPONENT } from '../riegel'
-import { gatherStartDelayChartData } from '../chart/startDelayChart'
+import { gatherStartDelayChartData } from '../chart/startDelayChartData'
 
 const emit = defineEmits<{
   (e: 'calculated', result: ReturnType<typeof calculateOptimalRunParams> | null): void

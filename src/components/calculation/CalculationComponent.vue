@@ -7,8 +7,8 @@ import type { gatherOptimalRunChartData } from './chart/optimalRunChartData'
 import OptimalRunChart from './chart/OptimalRunChart.vue'
 import CalculationSlider from './CalculationSlider.vue'
 import SlideWrapper from '../slide/SlideWrapper.vue'
-import StartDelayChart from './chart/startDelayChart.vue'
-import type { gatherStartDelayChartData } from './chart/startDelayChart'
+import type { gatherStartDelayChartData } from './chart/startDelayChartData'
+import StartDelayChart from './chart/StartDelayChart.vue'
 
 const calculationResult = ref<ReturnType<typeof calculateOptimalRunParams> | null>(null)
 const optimalRunChartData = ref<ReturnType<typeof gatherOptimalRunChartData> | null>(null)
