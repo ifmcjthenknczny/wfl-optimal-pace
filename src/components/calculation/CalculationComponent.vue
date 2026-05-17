@@ -5,6 +5,8 @@ import CalculationResult from './result/CalculationResult.vue'
 import calculateOptimalRunParams from './form/optimize'
 import type { gatherChartData } from './chart/chartData'
 import CalculationChart from './chart/CalculationChart.vue'
+import CalculationSlider from './CalculationSlider.vue'
+import SlideWrapper from '../slide/SlideWrapper.vue'
 
 const calculationResult = ref<ReturnType<typeof calculateOptimalRunParams> | null>(null)
 const chartData = ref<ReturnType<typeof gatherChartData> | null>(null)
@@ -21,12 +23,21 @@ const handleChartData = (data: ReturnType<typeof gatherChartData> | null) => {
 <template>
   <section class="calculator-card">
     <CalculationForm @calculated="handleResult" @gathered="handleChartData" />
-    <CalculationResult v-if="calculationResult" :result="calculationResult" />
-    <CalculationChart
-      v-if="chartData"
-      :car-points="chartData.carPoints"
-      :runner-points="chartData.runnerPoints"
-    />
+    <CalculationSlider v-if="calculationResult || chartData">
+<SlideWrapper>
+
+      <CalculationResult v-if="calculationResult" :result="calculationResult" />
+</SlideWrapper>
+  <SlideWrapper>
+
+      <CalculationChart
+        v-if="chartData"
+        :car-points="chartData.carPoints"
+        :runner-points="chartData.runnerPoints"
+      />
+  </SlideWrapper>
+
+    </CalculationSlider>
   </section>
 </template>
 
