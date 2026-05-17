@@ -57,6 +57,7 @@ const createChart = () => {
       interaction: {
         mode: 'index',
         intersect: false,
+        axis: 'x'
       },
       plugins: {
         legend: {

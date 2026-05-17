@@ -129,14 +129,13 @@ const calculate = () => {
   emit('calculated', optimizedResult)
 
   if (optimizedResult) {
-    const maxDistance = optimizedResult.distanceKms * 1.8
     const chartData = gatherChartData(
       {
         timeSeconds: totalSeconds,
         distanceKms: mappedFormState.referenceDistanceKms,
         startDelayMinutes: mappedFormState.runnerStartDelayMinutes,
       },
-      maxDistance,
+      optimizedResult.distanceKms,
       DEFAULT_RIEGEL_EXPONENT,
     )
     emit('gathered', chartData)
