@@ -3,7 +3,7 @@ import { onMounted, ref, watch } from 'vue'
 import Chart from 'chart.js/auto'
 import { formatTime } from '../helpers'
 import { MOBILE_BREAKPOINT_PX } from '../../../config'
-import { MAX_DELAY_TIME_MINUTES } from './startDelayChart';
+import { MAX_DELAY_TIME_MINUTES } from './startDelayChart'
 import { type ChartDataPoint } from './types'
 
 // TODO: deduplicate chart component
@@ -52,11 +52,11 @@ const createChart = () => {
       interaction: {
         mode: 'index',
         intersect: false,
-        axis: 'x'
+        axis: 'x',
       },
       plugins: {
         legend: {
-          display: false
+          display: false,
         },
         tooltip: {
           enabled: true,
@@ -70,7 +70,7 @@ const createChart = () => {
             label: (context) => {
               const distance = context.parsed.y
               return `Dystans: ${distance?.toFixed(3)} km`
-            }
+            },
           },
         },
       },

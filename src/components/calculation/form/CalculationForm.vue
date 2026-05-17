@@ -145,10 +145,13 @@ const calculate = () => {
     )
     emit('gathered', optimalRunChartData)
 
-    const startDelayChartData = gatherStartDelayChartData({
-      timeSeconds: totalSeconds,
-      distanceKms: mappedFormState.referenceDistanceKms
-    }, DEFAULT_RIEGEL_EXPONENT)
+    const startDelayChartData = gatherStartDelayChartData(
+      {
+        timeSeconds: totalSeconds,
+        distanceKms: mappedFormState.referenceDistanceKms,
+      },
+      DEFAULT_RIEGEL_EXPONENT,
+    )
     emit('gatheredStartDelay', startDelayChartData)
   }
 }

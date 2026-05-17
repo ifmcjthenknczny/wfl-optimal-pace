@@ -9,17 +9,23 @@ export const gatherStartDelayChartData = (
   runnerBaseValues: RunnerBaseValues,
   exponent: number = DEFAULT_RIEGEL_EXPONENT,
 ) => {
-    const points: ChartDataPoint[] = []
+  const points: ChartDataPoint[] = []
 
   for (
     let delayTimeMinutes = 0;
     delayTimeMinutes <= MAX_DELAY_TIME_MINUTES;
-    delayTimeMinutes += DATA_ACCURACY_MINUTES) 
-    {
-        points.push({
-            x: delayTimeMinutes,
-            y: calculateOptimalRunParams(runnerBaseValues.timeSeconds, runnerBaseValues.distanceKms, delayTimeMinutes, exponent)?.distanceKms || 0
-        })
+    delayTimeMinutes += DATA_ACCURACY_MINUTES
+  ) {
+    points.push({
+      x: delayTimeMinutes,
+      y:
+        calculateOptimalRunParams(
+          runnerBaseValues.timeSeconds,
+          runnerBaseValues.distanceKms,
+          delayTimeMinutes,
+          exponent,
+        )?.distanceKms || 0,
+    })
   }
 
   return { points }

@@ -59,7 +59,7 @@ const createChart = () => {
       interaction: {
         mode: 'index',
         intersect: false,
-        axis: 'y'
+        axis: 'y',
       },
       plugins: {
         legend: {
@@ -79,7 +79,7 @@ const createChart = () => {
             label: (context) => {
               const time = context.parsed.x
               return `Czas: ${formatTime(time ?? 0)}`
-            }
+            },
           },
         },
       },

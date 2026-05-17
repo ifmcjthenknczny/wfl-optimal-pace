@@ -14,7 +14,6 @@ const calculationResult = ref<ReturnType<typeof calculateOptimalRunParams> | nul
 const optimalRunChartData = ref<ReturnType<typeof gatherOptimalRunChartData> | null>(null)
 const startDelayChartData = ref<ReturnType<typeof gatherStartDelayChartData> | null>(null)
 
-
 const handleResult = (result: ReturnType<typeof calculateOptimalRunParams> | null) => {
   calculationResult.value = result
 }
@@ -30,7 +29,11 @@ const handleStartDelayChartData = (data: ReturnType<typeof gatherStartDelayChart
 
 <template>
   <section class="calculator-card">
-    <CalculationForm @calculated="handleResult" @gathered="handleOptimalRunChartData" @gathered-start-delay="handleStartDelayChartData" />
+    <CalculationForm
+      @calculated="handleResult"
+      @gathered="handleOptimalRunChartData"
+      @gathered-start-delay="handleStartDelayChartData"
+    />
     <CalculationSlider v-if="calculationResult || optimalRunChartData">
       <SlideWrapper>
         <CalculationResult v-if="calculationResult" :result="calculationResult" />

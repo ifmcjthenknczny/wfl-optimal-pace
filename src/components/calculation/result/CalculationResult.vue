@@ -2,7 +2,7 @@
 import { formatTime, formatPace } from '../helpers'
 import calculateOptimalRunParams from '../form/optimize'
 
-// TODO: remove start delay input from form and add here a slider component for possibility to dynamically change start delay time (30 sec intervals from 0 up to 15 minutes). optimal values are calculated immediately, debounced values are calculated for chart 
+// TODO: remove start delay input from form and add here a slider component for possibility to dynamically change start delay time (30 sec intervals from 0 up to 15 minutes). optimal values are calculated immediately, debounced values are calculated for chart
 
 defineProps<{
   result: ReturnType<typeof calculateOptimalRunParams>

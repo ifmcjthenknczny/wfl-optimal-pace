@@ -5,7 +5,12 @@ import { type ChartDataPoint } from './types'
 
 const DATA_ACCURACY_KM = 0.1
 
-const addChartEntry = (points: {carPoints: ChartDataPoint[], runnerPoints: ChartDataPoint[]}, runnerBaseValues: RunnerBaseValues & { startDelayMinutes: number }, distanceKms: number, exponent: number = DEFAULT_RIEGEL_EXPONENT) => {
+const addChartEntry = (
+  points: { carPoints: ChartDataPoint[]; runnerPoints: ChartDataPoint[] },
+  runnerBaseValues: RunnerBaseValues & { startDelayMinutes: number },
+  distanceKms: number,
+  exponent: number = DEFAULT_RIEGEL_EXPONENT,
+) => {
   const carTime = calculateWflCarCatchTime(distanceKms)
   const runnerTime = calculateRunnerTime(runnerBaseValues, distanceKms, exponent)
 
@@ -21,7 +26,8 @@ export const gatherOptimalRunChartData = (
   exponent: number = DEFAULT_RIEGEL_EXPONENT,
 ) => {
   const potentialMaxDistanceKms = optimalDistance * 1.8
-  const maxDistanceKms = potentialMaxDistanceKms > MAX_DISTANCE_IN_KMS ? MAX_DISTANCE_IN_KMS : potentialMaxDistanceKms
+  const maxDistanceKms =
+    potentialMaxDistanceKms > MAX_DISTANCE_IN_KMS ? MAX_DISTANCE_IN_KMS : potentialMaxDistanceKms
   const carPoints: ChartDataPoint[] = [
     {
       x: 0,
@@ -41,11 +47,14 @@ export const gatherOptimalRunChartData = (
     distanceKms <= maxDistanceKms;
     distanceKms += DATA_ACCURACY_KM
   ) {
-    const shouldAddOptimalResultThisIteration = optimalDistance > distanceKms - DATA_ACCURACY_KM && optimalDistance < distanceKms && Math.abs(optimalDistance - distanceKms) > 1e-6;
+    const shouldAddOptimalResultThisIteration =
+      optimalDistance > distanceKms - DATA_ACCURACY_KM &&
+      optimalDistance < distanceKms &&
+      Math.abs(optimalDistance - distanceKms) > 1e-6
     if (shouldAddOptimalResultThisIteration) {
-      addChartEntry({carPoints, runnerPoints}, runnerBaseValues, optimalDistance, exponent)
+      addChartEntry({ carPoints, runnerPoints }, runnerBaseValues, optimalDistance, exponent)
     }
-    addChartEntry({carPoints, runnerPoints}, runnerBaseValues, distanceKms, exponent)
+    addChartEntry({ carPoints, runnerPoints }, runnerBaseValues, distanceKms, exponent)
   }
 
   return { carPoints, runnerPoints }
