@@ -1,3 +1,5 @@
+import { MOBILE_BREAKPOINT_PX } from '@/config'
+
 export const calculatePace = (timeMinutes: number, distanceKms: number) => {
   return timeMinutes / distanceKms
 }
@@ -17,4 +19,8 @@ export const formatPace = (paceMinutesPerKm: number) => {
   const minutes = Math.floor(totalSeconds / 60)
   const seconds = totalSeconds % 60
   return `${minutes}:${toTwoDigits(seconds)} min/km`
+}
+
+export const isMobile = () => {
+  return window.innerWidth < MOBILE_BREAKPOINT_PX
 }

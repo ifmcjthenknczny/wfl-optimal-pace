@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import Chart from 'chart.js/auto'
-import { formatTime } from '../helpers'
-import { MOBILE_BREAKPOINT_PX } from '../../../config'
+import { formatTime, isMobile } from '../helpers'
 import { MAX_DELAY_TIME_MINUTES } from './startDelayChartData'
 import { type ChartDataPoint } from './types'
 
@@ -19,10 +18,10 @@ const createChart = () => {
   if (!chartCanvas.value) {
     return
   }
-  const isMobile = window.innerWidth < MOBILE_BREAKPOINT_PX
+  const applyMobileView = isMobile()
 
   const lineOptions = {
-    borderWidth: isMobile ? 2 : 3,
+    borderWidth: applyMobileView ? 2 : 3,
     pointRadius: 0,
     pointHitRadius: 10,
     tension: 0.1,
@@ -93,7 +92,7 @@ const createChart = () => {
           min: 0,
           grid: gridOptions,
           title: {
-            display: !isMobile,
+            display: !applyMobileView,
             text: 'Dystans [km]',
           },
         },
