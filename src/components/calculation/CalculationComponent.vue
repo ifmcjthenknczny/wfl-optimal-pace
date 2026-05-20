@@ -43,6 +43,7 @@ const handleStartDelayChartData = (data: ReturnType<typeof gatherStartDelayChart
           v-if="optimalRunChartData"
           :car-points="optimalRunChartData.carPoints"
           :runner-points="optimalRunChartData.runnerPoints"
+          :optimal-distance-index="optimalRunChartData.optimalDistanceIndex"
         />
       </SlideWrapper>
       <SlideWrapper>
