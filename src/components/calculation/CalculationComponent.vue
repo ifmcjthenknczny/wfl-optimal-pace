@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import CalculationForm from './form/CalculationForm.vue'
 import CalculationResult from './result/CalculationResult.vue'
 import calculateOptimalRunParams from './form/optimize'
@@ -14,6 +14,8 @@ const calculationResult = ref<ReturnType<typeof calculateOptimalRunParams> | nul
 const optimalRunChartData = ref<ReturnType<typeof gatherOptimalRunChartData> | null>(null)
 const startDelayChartData = ref<ReturnType<typeof gatherStartDelayChartData> | null>(null)
 
+const showForm = computed<boolean>(() => !calculationResult.value)
+
 const handleResult = (result: ReturnType<typeof calculateOptimalRunParams> | null) => {
   calculationResult.value = result
 }
@@ -25,28 +27,34 @@ const handleOptimalRunChartData = (data: ReturnType<typeof gatherOptimalRunChart
 const handleStartDelayChartData = (data: ReturnType<typeof gatherStartDelayChartData> | null) => {
   startDelayChartData.value = data
 }
+
+const clearResults = () => {
+  handleResult(null)
+  handleOptimalRunChartData(null)
+  handleStartDelayChartData(null)
+}
 </script>
 
 <template>
   <section class="calculator-card">
     <CalculationForm
+      v-if="showForm"
       @calculated="handleResult"
       @gathered="handleOptimalRunChartData"
       @gathered-start-delay="handleStartDelayChartData"
     />
-    <CalculationSlider v-if="calculationResult || optimalRunChartData">
-      <SlideWrapper>
-        <CalculationResult v-if="calculationResult" :result="calculationResult" />
+    <CalculationSlider v-if="!showForm" @clear="clearResults">
+      <SlideWrapper v-if="calculationResult">
+        <CalculationResult :result="calculationResult" />
       </SlideWrapper>
-      <SlideWrapper>
+      <SlideWrapper v-if="optimalRunChartData">
         <OptimalRunChart
-          v-if="optimalRunChartData"
           :car-points="optimalRunChartData.carPoints"
           :runner-points="optimalRunChartData.runnerPoints"
         />
       </SlideWrapper>
-      <SlideWrapper>
-        <StartDelayChart v-if="startDelayChartData" :points="startDelayChartData.points" />
+      <SlideWrapper v-if="startDelayChartData">
+        <StartDelayChart :points="startDelayChartData.points" />
       </SlideWrapper>
     </CalculationSlider>
   </section>

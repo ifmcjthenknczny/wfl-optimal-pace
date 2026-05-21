@@ -12,7 +12,7 @@ defineProps<{
 <template>
   <div class="results" v-if="result">
     <div class="results-header">
-      <h3>Wynik obliczeń:</h3>
+      <h3>Wynik obliczeń optymalnego biegu:</h3>
     </div>
 
     <div class="results-grid">
