@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { formatTime, formatPace } from '../helpers'
 import calculateOptimalRunParams from '../form/optimize'
+import ContentWrapper from '@/components/slide/ContentWrapper.vue'
 
 // TODO: remove start delay input from form and add here a slider component for possibility to dynamically change start delay time (30 sec intervals from 0 up to 15 minutes). optimal values are calculated immediately, debounced values are calculated for chart
+// TODO: fix result-item visually
 
 defineProps<{
   result: ReturnType<typeof calculateOptimalRunParams>
@@ -10,11 +12,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="results" v-if="result">
-    <div class="results-header">
-      <h3>Wynik obliczeń optymalnego biegu:</h3>
-    </div>
-
+  <ContentWrapper header="Wynik obliczeń optymalnego biegu:" v-if="result">
     <div class="results-grid">
       <div class="result-item result-item--primary">
         <span class="result-label">Średnie tempo</span>
@@ -38,31 +36,10 @@ defineProps<{
         </div>
       </div>
     </div>
-  </div>
+  </ContentWrapper>
 </template>
 
 <style scoped>
-.results {
-  margin-top: 1rem;
-  padding: 1rem;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--color-background-mute) 78%, transparent);
-  border: 1px solid var(--color-border);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  text-align: center;
-}
-
-.results-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
-}
-
-.results-header h3 {
-  font-weight: 700;
-}
-
 .results-badge {
   display: inline-block;
   padding: 0.2rem 0.55rem;

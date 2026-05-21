@@ -11,6 +11,8 @@ const registerSlide = inject<any>('registerSlide')
 const slideContext = registerSlide ? registerSlide() : null
 
 onUnmounted(() => {
-  if (slideContext) slideContext.unregister()
+  if (slideContext) {
+    slideContext.unregister()
+  }
 })
 </script>
