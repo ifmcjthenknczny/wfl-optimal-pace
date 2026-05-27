@@ -16,6 +16,7 @@ import { DEFAULT_RIEGEL_EXPONENT } from '../riegel'
 import { gatherStartDelayChartData } from '../chart/startDelayChartData'
 import ButtonComponent from '@/components/utils/ButtonComponent.vue'
 import DistanceInput from './input/DistanceInput.vue'
+import { type Time } from './types.ts'
 
 const emit = defineEmits<{
   (e: 'calculated', result: ReturnType<typeof calculateOptimalRunParams> | null): void
@@ -27,7 +28,7 @@ const replaceCommaByDot = (num: number): number => {
   return +num.toString().replace(',', '.')
 }
 
-const extractFullHours = (minutes: number): { hours: number; minutes: number } => {
+const extractFullHours = (minutes: number): Time => {
   return { hours: Math.floor(minutes / 60), minutes: minutes % 60 }
 }
 
@@ -174,11 +175,23 @@ const calculate = () => {
     emit('gatheredStartDelay', startDelayChartData)
   }
 }
+
+const onPresetSelected = (time?: Time) => {
+  if (!time) {
+    return
+  }
+  formState.referenceTimeHours = time.hours
+  formState.referenceTimeMinutes = time.minutes
+  formState.referenceTimeSeconds = time.seconds ?? 0
+}
 </script>
 
 <template>
   <div class="form-grid">
-    <DistanceInput v-model="formState.referenceDistanceKms" />
+    <DistanceInput
+      v-model="formState.referenceDistanceKms"
+      @preset-selected="onPresetSelected(time)"
+    />
 
     <fieldset>
       <legend>Wynik na zawodach (czas netto)</legend>

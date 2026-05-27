@@ -11,7 +11,7 @@
         type="button"
         class="preset-btn"
         :class="{ 'preset-btn--active': modelValue == preset.value }"
-        @click="$emit('update:modelValue', preset.value)"
+        @click="() => handleClick(preset)"
       >
         {{ preset.label }}
       </button>
@@ -20,11 +20,18 @@
 </template>
 
 <script setup lang="ts">
-const PRESETS = [
-  { label: '5 km', value: 5 },
-  { label: '10 km', value: 10 },
-  { label: 'Półmaraton', value: 21.0975 },
-  { label: 'Maraton', value: 42.195 },
+import { type Time } from '../types'
+
+type Preset = {
+  label: string
+  value: number
+} & Time
+
+const PRESETS: Preset[] = [
+  { label: '5 km', value: 5, hours: 0, minutes: 27, seconds: 30 },
+  { label: '10 km', value: 10, hours: 1, minutes: 0, seconds: 0 },
+  { label: 'Półmaraton', value: 21.0975, hours: 2, minutes: 0, seconds: 0 },
+  { label: 'Maraton', value: 42.195, hours: 4, minutes: 0, seconds: 0 },
 ] as const
 
 const props = defineProps<{
@@ -33,10 +40,16 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: number): void
+  (e: 'preset-selected', time: Time): void
 }>()
 
 const onInput = (e: Event) => {
   emit('update:modelValue', (e.target as HTMLInputElement).value as unknown as number)
+}
+
+const handleClick = (preset: Preset) => {
+  emit('update:modelValue', preset.value)
+  emit('preset-selected', { hours: preset.hours, minutes: preset.minutes, seconds: preset.seconds })
 }
 </script>
 
