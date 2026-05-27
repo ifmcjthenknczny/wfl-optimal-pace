@@ -1,6 +1,6 @@
 import calculateWflCarCatchTime from '../car'
 import { calculatePace } from '../helpers'
-import calculateRunnerTime, { DEFAULT_RIEGEL_EXPONENT } from '../riegel'
+import calculateRunnerTime, { RIEGEL_EXPONENTS } from '../riegel'
 import {
   REFINEMENT_STEPS,
   MIN_DISTANCE_IN_KMS,
@@ -79,7 +79,7 @@ const calculateOptimalRunParams = (
   refTimeSeconds: number,
   refDistanceKms: number,
   runnerStartDelayMinutes: number,
-  exponent: number = DEFAULT_RIEGEL_EXPONENT,
+  exponent: number = RIEGEL_EXPONENTS.default,
 ): OptimalRunParams | null => {
   if (refTimeSeconds <= 0 || refDistanceKms <= 0) {
     return null

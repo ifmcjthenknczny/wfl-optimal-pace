@@ -1,4 +1,4 @@
-import { DEFAULT_RIEGEL_EXPONENT, type RunnerBaseValues } from '../riegel'
+import { RIEGEL_EXPONENTS, type RunnerBaseValues } from '../riegel'
 import calculateOptimalRunParams from '../form/optimize'
 import { type ChartDataPoint } from './types'
 
@@ -7,7 +7,7 @@ const DATA_ACCURACY_MINUTES = 0.25
 
 export const gatherStartDelayChartData = (
   runnerBaseValues: RunnerBaseValues,
-  exponent: number = DEFAULT_RIEGEL_EXPONENT,
+  exponent: number = RIEGEL_EXPONENTS.default,
 ) => {
   const points: ChartDataPoint[] = []
 

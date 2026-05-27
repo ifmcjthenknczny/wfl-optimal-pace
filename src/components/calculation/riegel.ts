@@ -1,6 +1,13 @@
-export const MIN_RIEGEL_EXPONENT = 1.06
-export const DEFAULT_RIEGEL_EXPONENT = 1.06
-export const MAX_RIEGEL_EXPONENT = 1.1
+export const RIEGEL_EXPONENTS = {
+  pro: 1.02,
+  semipro: 1.04,
+  advanced: 1.06,
+  regular: 1.08,
+  casual: 1.1,
+  beginner: 1.15,
+
+  default: 1.08,
+} as const
 
 export type RunnerBaseValues = {
   timeSeconds: number
@@ -10,7 +17,7 @@ export type RunnerBaseValues = {
 const calculateRunnerTime = (
   { timeSeconds, distanceKms }: RunnerBaseValues,
   targetDistanceKms: number,
-  exponent: number = DEFAULT_RIEGEL_EXPONENT,
+  exponent: number = RIEGEL_EXPONENTS.default,
 ) => {
   const runnerTimeMinutes = (timeSeconds * Math.pow(targetDistanceKms / distanceKms, exponent)) / 60
   return runnerTimeMinutes

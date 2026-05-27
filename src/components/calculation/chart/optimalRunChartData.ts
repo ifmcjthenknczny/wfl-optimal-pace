@@ -1,6 +1,6 @@
 import calculateWflCarCatchTime from '../car'
 import { MAX_DISTANCE_IN_KMS } from '../../../config'
-import calculateRunnerTime, { DEFAULT_RIEGEL_EXPONENT, type RunnerBaseValues } from '../riegel'
+import calculateRunnerTime, { RIEGEL_EXPONENTS, type RunnerBaseValues } from '../riegel'
 import { type ChartDataPoint } from './types'
 
 const DATA_ACCURACY_KM = 0.1
@@ -9,7 +9,7 @@ const addChartEntry = (
   points: { carPoints: ChartDataPoint[]; runnerPoints: ChartDataPoint[] },
   runnerBaseValues: RunnerBaseValues & { startDelayMinutes: number },
   distanceKms: number,
-  exponent: number = DEFAULT_RIEGEL_EXPONENT,
+  exponent: number = RIEGEL_EXPONENTS.default,
 ) => {
   const carTime = calculateWflCarCatchTime(distanceKms)
   const runnerTime = calculateRunnerTime(runnerBaseValues, distanceKms, exponent)
@@ -23,7 +23,7 @@ const addChartEntry = (
 export const gatherOptimalRunChartData = (
   runnerBaseValues: RunnerBaseValues & { startDelayMinutes: number },
   optimalDistance: number,
-  exponent: number = DEFAULT_RIEGEL_EXPONENT,
+  exponent: number = RIEGEL_EXPONENTS.default,
 ) => {
   const potentialMaxDistanceKms = optimalDistance * 1.8
   const maxDistanceKms =

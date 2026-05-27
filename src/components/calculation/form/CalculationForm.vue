@@ -12,7 +12,7 @@ import {
   ULTRA_HUMAN_COEFFICIENT,
 } from './boundaries'
 import { gatherOptimalRunChartData } from '../chart/optimalRunChartData'
-import { DEFAULT_RIEGEL_EXPONENT } from '../riegel'
+import { RIEGEL_EXPONENTS } from '../riegel'
 import { gatherStartDelayChartData } from '../chart/startDelayChartData'
 import ButtonComponent from '@/components/utils/ButtonComponent.vue'
 import DistanceInput from './input/DistanceInput.vue'
@@ -32,8 +32,25 @@ const extractFullHours = (minutes: number): Time => {
   return { hours: Math.floor(minutes / 60), minutes: minutes % 60 }
 }
 
-// TODO: form errors mapper to separate file, polish errors
+const RIEGEL_LABELS: Record<keyof typeof RIEGEL_EXPONENTS, string> = {
+  pro: 'Pro',
+  semipro: 'Semipro',
+  advanced: 'Zaawansowany',
+  regular: 'Regularny',
+  casual: 'Rekreacyjny ',
+  beginner: 'Początkujący',
+  default: 'DEFAULT',
+}
 
+const RIEGEL_OPTIONS = Object.entries(RIEGEL_EXPONENTS)
+  .filter(([key]) => key !== 'default')
+  .map(([key, value]) => ({
+    key,
+    value,
+    label: RIEGEL_LABELS[key as keyof typeof RIEGEL_EXPONENTS],
+  }))
+
+// TODO: form errors mapper to separate file, polish errors
 const formSchema = z
   .object({
     referenceDistanceKms: z
@@ -43,6 +60,11 @@ const formSchema = z
     referenceTimeMinutes: z.number().int().min(0).max(59),
     referenceTimeSeconds: z.number().int().min(0).max(59),
     runnerStartDelayMinutes: z.number().min(0, 'Opóźnienie nie może być ujemne'),
+    riegelExponent: z
+      .number()
+      .min(Math.min(...Object.values(RIEGEL_EXPONENTS)))
+      .max(Math.max(...Object.values(RIEGEL_EXPONENTS)))
+      .default(RIEGEL_EXPONENTS.default),
   })
   .refine(
     (values) =>
@@ -93,6 +115,7 @@ const DEFAULT_FORM_STATE: FormState = {
   referenceTimeMinutes: 60,
   referenceTimeSeconds: 0,
   runnerStartDelayMinutes: 5,
+  riegelExponent: RIEGEL_EXPONENTS.default,
 }
 
 const formState = reactive<FormState>(DEFAULT_FORM_STATE)
@@ -149,7 +172,7 @@ const calculate = () => {
     totalSeconds,
     mappedFormState.referenceDistanceKms,
     mappedFormState.runnerStartDelayMinutes,
-    DEFAULT_RIEGEL_EXPONENT,
+    formState.riegelExponent,
   )
   emit('calculated', optimizedResult)
 
@@ -161,7 +184,7 @@ const calculate = () => {
         startDelayMinutes: mappedFormState.runnerStartDelayMinutes,
       },
       optimizedResult.distanceKms,
-      DEFAULT_RIEGEL_EXPONENT,
+      formState.riegelExponent,
     )
     emit('gathered', optimalRunChartData)
 
@@ -170,7 +193,7 @@ const calculate = () => {
         timeSeconds: totalSeconds,
         distanceKms: mappedFormState.referenceDistanceKms,
       },
-      DEFAULT_RIEGEL_EXPONENT,
+      formState.riegelExponent,
     )
     emit('gatheredStartDelay', startDelayChartData)
   }
@@ -206,6 +229,15 @@ const onPresetSelected = (time?: Time) => {
         /></label>
       </div>
     </fieldset>
+
+    <label class="label full-width">
+      Doświadczenie biegowe
+      <select v-model.number="formState.riegelExponent">
+        <option v-for="option in RIEGEL_OPTIONS" :key="option.key" :value="option.value">
+          {{ option.label }}
+        </option>
+      </select>
+    </label>
 
     <label class="label">
       Opóźnienie startu na Wings For Life [min]
