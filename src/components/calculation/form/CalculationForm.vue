@@ -188,10 +188,7 @@ const onPresetSelected = (time?: Time) => {
 
 <template>
   <div class="form-grid">
-    <DistanceInput
-      v-model="formState.referenceDistanceKms"
-      @preset-selected="onPresetSelected(time)"
-    />
+    <DistanceInput v-model="formState.referenceDistanceKms" @preset-selected="onPresetSelected" />
 
     <fieldset>
       <legend>Wynik na zawodach (czas netto)</legend>
