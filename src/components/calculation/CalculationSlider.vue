@@ -1,18 +1,16 @@
 <template>
   <div class="calculator-slider">
     <div class="slider-navigation">
-      <ButtonComponent
-        color="default"
-        size="sm"
-        @click="prev"
-        :disabled="currentIndex === 0"
-      >&larr;</ButtonComponent>
+      <ButtonComponent color="default" size="sm" @click="prev" :disabled="currentIndex === 0"
+        >&larr;</ButtonComponent
+      >
       <ButtonComponent
         color="default"
         size="sm"
         @click="next"
         :disabled="currentIndex === totalSlides - 1"
-      >&rarr;</ButtonComponent>
+        >&rarr;</ButtonComponent
+      >
     </div>
     <div class="slider-content">
       <slot />

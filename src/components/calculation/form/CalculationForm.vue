@@ -27,7 +27,7 @@ const replaceCommaByDot = (num: number): number => {
   return +num.toString().replace(',', '.')
 }
 
-const extractFullHours = (minutes: number): { hours: number, minutes: number } => {
+const extractFullHours = (minutes: number): { hours: number; minutes: number } => {
   return { hours: Math.floor(minutes / 60), minutes: minutes % 60 }
 }
 
@@ -117,8 +117,12 @@ const mapFormData = (formState: FormState): FormState => {
 
   return {
     ...formState,
-    referenceTimeHours: shouldExtractFullHoursFromMinutes ? referenceTimeFullHoursWithMinutes.hours : formState.referenceTimeHours,
-    referenceTimeMinutes: shouldExtractFullHoursFromMinutes ? referenceTimeFullHoursWithMinutes.minutes : formState.referenceTimeMinutes,
+    referenceTimeHours: shouldExtractFullHoursFromMinutes
+      ? referenceTimeFullHoursWithMinutes.hours
+      : formState.referenceTimeHours,
+    referenceTimeMinutes: shouldExtractFullHoursFromMinutes
+      ? referenceTimeFullHoursWithMinutes.minutes
+      : formState.referenceTimeMinutes,
     referenceDistanceKms: replaceCommaByDot(formState.referenceDistanceKms),
     runnerStartDelayMinutes: replaceCommaByDot(formState.runnerStartDelayMinutes),
   }
