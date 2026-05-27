@@ -25,7 +25,11 @@ const replaceCommaByDot = (num: number): number => {
   return +num.toString().replace(',', '.')
 }
 
-// TODO: form errors mapper to separate file
+const extractFullHours = (minutes: number): { hours: number, minutes: number } => {
+  return { hours: Math.floor(minutes / 60), minutes: minutes % 60 }
+}
+
+// TODO: form errors mapper to separate file, polish errors
 
 const formSchema = z
   .object({
@@ -57,7 +61,9 @@ const formSchema = z
         values.referenceTimeMinutes +
         values.referenceTimeSeconds / 60
       const userPace = calculatePace(totalMinutes, values.referenceDistanceKms)
-      if (userPace < MIN_REASONABLE_PACE) return false
+      if (userPace < MIN_REASONABLE_PACE) {
+        return false
+      }
 
       const distances = Object.keys(WORLD_RECORDS)
         .map(Number)
@@ -78,13 +84,15 @@ const formSchema = z
 
 type FormState = z.infer<typeof formSchema>
 
-const formState = reactive<FormState>({
-  referenceDistanceKms: 42.195,
-  referenceTimeHours: 1,
-  referenceTimeMinutes: 59,
-  referenceTimeSeconds: 30,
-  runnerStartDelayMinutes: 0,
-})
+const DEFAULT_FORM_STATE: FormState = {
+  referenceDistanceKms: 10,
+  referenceTimeHours: 0,
+  referenceTimeMinutes: 60,
+  referenceTimeSeconds: 0,
+  runnerStartDelayMinutes: 5,
+}
+
+const formState = reactive<FormState>(DEFAULT_FORM_STATE)
 
 const hasAttemptedCalculation = ref(false)
 const formIsValid = ref(false)
@@ -102,8 +110,13 @@ watch(
 )
 
 const mapFormData = (formState: FormState): FormState => {
+  const shouldExtractFullHoursFromMinutes = formState.referenceTimeHours === 0
+  const referenceTimeFullHoursWithMinutes = extractFullHours(formState.referenceTimeMinutes)
+
   return {
     ...formState,
+    referenceTimeHours: shouldExtractFullHoursFromMinutes ? referenceTimeFullHoursWithMinutes.hours : formState.referenceTimeHours,
+    referenceTimeMinutes: shouldExtractFullHoursFromMinutes ? referenceTimeFullHoursWithMinutes.minutes : formState.referenceTimeMinutes,
     referenceDistanceKms: replaceCommaByDot(formState.referenceDistanceKms),
     runnerStartDelayMinutes: replaceCommaByDot(formState.runnerStartDelayMinutes),
   }

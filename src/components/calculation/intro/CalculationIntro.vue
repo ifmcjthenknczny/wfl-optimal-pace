@@ -5,7 +5,7 @@
     <p>Podaj swój wynik z ostatnich zawodów aby oszacować realny cel tempa na bieg.</p>
     <p>
       Model wylicza Twoje możliwości na podstawie wzorów Riegla, porównuje je ze schematem
-      poruszania się samochodu pościgowego i optymalizuje pod kątem najdłuższego przebytego
+      poruszania się samochodu pościgowego i optymalizuje tempo pod kątem osiągnięcia najdłuższego osiągniętego
       dystansu.
     </p>
   </div>

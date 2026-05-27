@@ -2,6 +2,8 @@
 import CalculatorIntro from './components/calculation/intro/CalculationIntro.vue'
 import FooterComponent from './components/footer/FooterComponent.vue'
 import CalculationComponent from './components/calculation/CalculationComponent.vue'
+
+// TODO: i18n
 </script>
 
 <template>

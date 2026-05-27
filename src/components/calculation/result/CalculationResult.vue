@@ -13,26 +13,28 @@ defineProps<{
 
 <template>
   <ContentWrapper header="Wynik obliczeń optymalnego biegu:" v-if="result">
-    <div class="results-grid">
-      <div class="result-item result-item--primary">
-        <span class="result-label">Średnie tempo</span>
-        <strong class="result-value">{{ formatPace(result.avgPace) }}</strong>
-      </div>
-
-      <div class="result-item result-item--secondary">
-        <span class="result-label">Dystans</span>
-        <strong class="result-value">{{ result.distanceKms.toFixed(3) }} km</strong>
-      </div>
-
-      <div class="result-group">
-        <div class="result-item-inner">
-          <span class="result-label">Czas netto</span>
-          <strong class="result-value">{{ formatTime(result.netRunnerTimeMinutes) }}</strong>
+    <div class="results-wrapper">
+      <div class="results-grid">
+        <div class="result-item result-item--primary">
+          <span class="result-label">Średnie tempo</span>
+          <strong class="result-value">{{ formatPace(result.avgPace) }}</strong>
         </div>
-        <div class="result-divider"></div>
-        <div class="result-item-inner">
-          <span class="result-label">Czas brutto</span>
-          <strong class="result-value">{{ formatTime(result.grossRunnerTimeMinutes) }}</strong>
+
+        <div class="result-item result-item--secondary">
+          <span class="result-label">Dystans</span>
+          <strong class="result-value">{{ result.distanceKms.toFixed(3) }} km</strong>
+        </div>
+
+        <div class="result-group">
+          <div class="result-item-inner">
+            <span class="result-label">Czas netto</span>
+            <strong class="result-value">{{ formatTime(result.netRunnerTimeMinutes) }}</strong>
+          </div>
+          <div class="result-divider"></div>
+          <div class="result-item-inner">
+            <span class="result-label">Czas brutto</span>
+            <strong class="result-value">{{ formatTime(result.grossRunnerTimeMinutes) }}</strong>
+          </div>
         </div>
       </div>
     </div>
@@ -113,6 +115,13 @@ defineProps<{
 @media (min-width: 641px) {
   .results-grid {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .results-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .result-group {
