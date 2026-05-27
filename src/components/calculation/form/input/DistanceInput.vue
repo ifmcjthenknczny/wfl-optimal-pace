@@ -84,7 +84,8 @@ input {
 
 .preset-btn:hover {
   border-color: #2f8f6b;
-  color: #2f8f6b;
+  border-color: #2f8f6b;
+  color: #fff;
 }
 
 .preset-btn--active {

@@ -15,7 +15,7 @@ import { gatherOptimalRunChartData } from '../chart/optimalRunChartData'
 import { DEFAULT_RIEGEL_EXPONENT } from '../riegel'
 import { gatherStartDelayChartData } from '../chart/startDelayChartData'
 import ButtonComponent from '@/components/utils/ButtonComponent.vue'
-import DistanceInput from './DistanceInput.vue'
+import DistanceInput from './input/DistanceInput.vue'
 
 const emit = defineEmits<{
   (e: 'calculated', result: ReturnType<typeof calculateOptimalRunParams> | null): void
