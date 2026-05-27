@@ -19,6 +19,7 @@ const props = defineProps<{
   height: 400px;
   width: 100%;
   margin-top: 1rem;
+  margin-bottom: 1.5rem;
   background: color-mix(in srgb, var(--color-background-mute) 78%, transparent);
   border-radius: 12px;
   border: 1px solid var(--color-border);

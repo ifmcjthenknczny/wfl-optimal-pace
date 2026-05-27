@@ -117,7 +117,7 @@ watch(
 </script>
 
 <template>
-  <ContentWrapper header="Opóźnienie startu a osiągnięty dystans:">
+  <ContentWrapper header="Opóźnienie startu a przebiegnięty dystans:">
     <canvas ref="chartCanvas"></canvas>
   </ContentWrapper>
 </template>

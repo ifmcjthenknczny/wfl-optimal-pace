@@ -14,6 +14,7 @@ import {
 import { gatherOptimalRunChartData } from '../chart/optimalRunChartData'
 import { DEFAULT_RIEGEL_EXPONENT } from '../riegel'
 import { gatherStartDelayChartData } from '../chart/startDelayChartData'
+import ButtonComponent from '@/components/utils/ButtonComponent.vue'
 
 const emit = defineEmits<{
   (e: 'calculated', result: ReturnType<typeof calculateOptimalRunParams> | null): void
@@ -199,7 +200,15 @@ const calculate = () => {
       <input v-model="formState.runnerStartDelayMinutes" type="text" min="0" />
     </label>
 
-    <button class="form-calculate-button" type="button" @click="calculate">Oblicz</button>
+    <ButtonComponent
+      color="success"
+      size="lg"
+      type="button"
+      class="form-calculate-button"
+      @click="calculate"
+    >
+      Oblicz
+    </ButtonComponent>
     <p v-if="hasAttemptedCalculation && !formIsValid" class="form-error">{{ validationError }}</p>
   </div>
 </template>
@@ -259,23 +268,6 @@ legend {
   grid-template-columns: 1fr;
   gap: 0.6rem;
   text-align: right;
-}
-
-.form-calculate-button {
-  margin-top: 0.25rem;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  padding: 0.65rem 0.95rem;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #fff;
-  background: #2f8f6b;
-  cursor: pointer;
-}
-
-.form-calculate-button:hover,
-.form-calculate-button:focus {
-  background: #2a7d5f;
 }
 
 .form-error {

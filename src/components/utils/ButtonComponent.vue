@@ -56,8 +56,8 @@
   
   /* --- colors --- */
   .btn--default {
-    background: #eee;
-    border: 1px solid #ccc;
+    background: #bbb;
+    border: 1px solid #aaa;
     color: inherit;
   }
   
