@@ -4,6 +4,7 @@ import Chart from 'chart.js/auto'
 import { formatTime, isMobile } from '../helpers'
 import { MAX_DELAY_TIME_MINUTES } from './startDelayChartData'
 import { type ChartDataPoint } from './types'
+import ContentWrapper from '@/components/slide/ContentWrapper.vue'
 
 // TODO: deduplicate chart component
 
@@ -116,25 +117,7 @@ watch(
 </script>
 
 <template>
-  <div class="chart-wrapper">
+  <ContentWrapper header="Opóźnienie startu a osiągnięty dystans:">
     <canvas ref="chartCanvas"></canvas>
-  </div>
+  </ContentWrapper>
 </template>
-
-<style scoped>
-.chart-wrapper {
-  position: relative;
-  height: 400px;
-  width: 100%;
-  margin-top: 1.5rem;
-  background: var(--color-background-soft);
-  border-radius: 12px;
-  border: 1px solid var(--color-border);
-}
-
-@media (min-width: 641px) {
-  .chart-wrapper {
-    padding: 1rem;
-  }
-}
-</style>
