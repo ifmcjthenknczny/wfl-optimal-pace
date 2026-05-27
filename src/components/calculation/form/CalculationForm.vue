@@ -15,6 +15,7 @@ import { gatherOptimalRunChartData } from '../chart/optimalRunChartData'
 import { DEFAULT_RIEGEL_EXPONENT } from '../riegel'
 import { gatherStartDelayChartData } from '../chart/startDelayChartData'
 import ButtonComponent from '@/components/utils/ButtonComponent.vue'
+import DistanceInput from './DistanceInput.vue'
 
 const emit = defineEmits<{
   (e: 'calculated', result: ReturnType<typeof calculateOptimalRunParams> | null): void
@@ -173,10 +174,7 @@ const calculate = () => {
 
 <template>
   <div class="form-grid">
-    <label class="label">
-      Dystans zawodów [km]
-      <input v-model="formState.referenceDistanceKms" type="text" />
-    </label>
+    <DistanceInput v-model="formState.referenceDistanceKms" />
 
     <fieldset>
       <legend>Wynik na zawodach (czas netto)</legend>
@@ -217,7 +215,6 @@ const calculate = () => {
 .form-grid {
   display: grid;
   gap: 0.9rem;
-  margin-top: 1rem;
 }
 
 label {
