@@ -6,7 +6,7 @@
     <p>
       Model wylicza Twoje możliwości na podstawie wzorów Riegla, porównuje je ze schematem
       poruszania się samochodu pościgowego i optymalizuje tempo pod kątem osiągnięcia najdłuższego
-      osiągniętego dystansu.
+      przebiegniętego dystansu.
     </p>
   </div>
 </template>

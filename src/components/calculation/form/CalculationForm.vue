@@ -32,23 +32,22 @@ const extractFullHours = (minutes: number): Time => {
   return { hours: Math.floor(minutes / 60), minutes: minutes % 60 }
 }
 
-const RIEGEL_LABELS: Record<keyof typeof RIEGEL_EXPONENTS, string> = {
-  pro: 'Pro',
-  semipro: 'Semipro',
-  advanced: 'Zaawansowany',
-  regular: 'Regularny',
-  casual: 'Rekreacyjny ',
-  beginner: 'Początkujący',
-  default: 'DEFAULT',
+type RunnerLevel = Exclude<keyof typeof RIEGEL_EXPONENTS, 'default'>
+
+const RIEGEL_LABELS: Record<RunnerLevel, string> = {
+  pro: 'Profesjonalista',
+  semipro: 'Półprofesjonalista',
+  advanced: 'Zaawansowany biegacz',
+  regular: 'Regularny biegacz',
+  casual: 'Rekreacyjny biegacz',
+  beginner: 'Początkujący biegacz',
 }
 
-const RIEGEL_OPTIONS = Object.entries(RIEGEL_EXPONENTS)
-  .filter(([key]) => key !== 'default')
-  .map(([key, value]) => ({
-    key,
-    value,
-    label: RIEGEL_LABELS[key as keyof typeof RIEGEL_EXPONENTS],
-  }))
+const RIEGEL_OPTIONS = Object.entries(RIEGEL_EXPONENTS).map(([key, value]) => ({
+  key,
+  value,
+  label: RIEGEL_LABELS[key as RunnerLevel],
+}))
 
 // TODO: form errors mapper to separate file, polish errors
 const formSchema = z

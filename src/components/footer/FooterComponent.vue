@@ -2,7 +2,11 @@
   <footer class="footer">
     <div class="footer-container">
       <p>©2026 Maciej Konieczny</p>
-      <a class="repo-link" href="https://github.com/ifmcjthenknczny/wfl-optimal-pace">Repository</a>
+      <div class="repo">
+        <a class="repo-link" href="https://github.com/ifmcjthenknczny/wfl-optimal-pace"
+          >Repository</a
+        >
+      </div>
     </div>
   </footer>
 </template>
@@ -14,11 +18,17 @@ p {
 }
 
 .footer-container {
-  display: flex;
-  flex-direction: column;
+  position: relative;
   width: 100%;
   justify-content: center;
   align-items: center;
+}
+
+.repo {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-right: 8px;
 }
 
 .footer {
