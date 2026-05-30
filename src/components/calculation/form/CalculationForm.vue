@@ -2,21 +2,13 @@
 import { reactive, ref, watch } from 'vue'
 import { z } from 'zod'
 import calculateOptimalRunParams from './optimize'
-import { formatTime, calculatePace } from '../helpers'
-import {
-  WORLD_RECORDS,
-  type WorldRecordDistance,
-  MIN_REASONABLE_DISTANCE_KMS,
-  MIN_REASONABLE_PACE,
-  MIN_REASONABLE_TIME_SECONDS,
-  ULTRA_HUMAN_COEFFICIENT,
-} from './boundaries'
 import { gatherOptimalRunChartData } from '../chart/optimalRunChartData'
 import { RIEGEL_EXPONENTS } from '../riegel'
 import { gatherStartDelayChartData } from '../chart/startDelayChartData'
 import ButtonComponent from '@/components/utils/ButtonComponent.vue'
 import DistanceInput from './input/DistanceInput.vue'
 import { type Time } from './types.ts'
+import { formSchema } from './validation.ts'
 
 const emit = defineEmits<{
   (e: 'calculated', result: ReturnType<typeof calculateOptimalRunParams> | null): void
@@ -32,15 +24,19 @@ const extractFullHours = (minutes: number): Time => {
   return { hours: Math.floor(minutes / 60), minutes: minutes % 60 }
 }
 
+const toSeconds = ({ hours, minutes, seconds = 0 }: Time) => {
+  return hours * 3600 + minutes * 60 + seconds
+}
+
 type RunnerLevel = Exclude<keyof typeof RIEGEL_EXPONENTS, 'default'>
 
 const RIEGEL_LABELS: Record<RunnerLevel, string> = {
-  pro: 'Profesjonalista',
-  semipro: 'Półprofesjonalista',
-  advanced: 'Zaawansowany biegacz',
-  regular: 'Regularny biegacz',
-  casual: 'Rekreacyjny biegacz',
-  beginner: 'Początkujący biegacz',
+  pro: '40 i więcej km',
+  semipro: '30 - 39 km',
+  advanced: '20 - 29 km',
+  regular: '10 - 19 km',
+  casual: '5 - 9 km',
+  beginner: 'Do 5 km',
 }
 
 const RIEGEL_OPTIONS = Object.entries(RIEGEL_EXPONENTS).map(([key, value]) => ({
@@ -48,63 +44,6 @@ const RIEGEL_OPTIONS = Object.entries(RIEGEL_EXPONENTS).map(([key, value]) => ({
   value,
   label: RIEGEL_LABELS[key as RunnerLevel],
 }))
-
-// TODO: form errors mapper to separate file, polish errors
-const formSchema = z
-  .object({
-    referenceDistanceKms: z
-      .number('Wpisz dystans jako liczbę')
-      .positive('Dystans musi być większy niż 0 km'),
-    referenceTimeHours: z.number().int().min(0, 'Godziny nie mogą być ujemne'),
-    referenceTimeMinutes: z.number().int().min(0).max(59),
-    referenceTimeSeconds: z.number().int().min(0).max(59),
-    runnerStartDelayMinutes: z.number().min(0, 'Opóźnienie nie może być ujemne'),
-    riegelExponent: z
-      .number()
-      .min(Math.min(...Object.values(RIEGEL_EXPONENTS)))
-      .max(Math.max(...Object.values(RIEGEL_EXPONENTS)))
-      .default(RIEGEL_EXPONENTS.default),
-  })
-  .refine(
-    (values) =>
-      values.referenceTimeHours * 3600 +
-        values.referenceTimeMinutes * 60 +
-        values.referenceTimeSeconds >=
-      MIN_REASONABLE_TIME_SECONDS,
-    {
-      message: `Czas referencyjny musi być większy od ${formatTime(MIN_REASONABLE_TIME_SECONDS)}.`,
-    },
-  )
-  .refine((values) => values.referenceDistanceKms >= MIN_REASONABLE_DISTANCE_KMS, {
-    message: `Dystans musi być większy niż ${MIN_REASONABLE_DISTANCE_KMS} km.`,
-  })
-  .refine(
-    (values) => {
-      const totalMinutes =
-        values.referenceTimeHours * 60 +
-        values.referenceTimeMinutes +
-        values.referenceTimeSeconds / 60
-      const userPace = calculatePace(totalMinutes, values.referenceDistanceKms)
-      if (userPace < MIN_REASONABLE_PACE) {
-        return false
-      }
-
-      const distances = Object.keys(WORLD_RECORDS)
-        .map(Number)
-        .sort((a, b) => b - a)
-      const matchedDistance = distances.find((d) => values.referenceDistanceKms >= d)
-
-      if (matchedDistance) {
-        const wrTime = WORLD_RECORDS[matchedDistance as WorldRecordDistance]
-        const wrPace = wrTime / matchedDistance
-        if (userPace < wrPace / ULTRA_HUMAN_COEFFICIENT) {
-          return false
-        }
-      }
-      return true
-    },
-    { message: 'Nie ściemniaj XD' },
-  )
 
 type FormState = z.infer<typeof formSchema>
 
@@ -120,7 +59,7 @@ const DEFAULT_FORM_STATE: FormState = {
 const formState = reactive<FormState>(DEFAULT_FORM_STATE)
 
 const hasAttemptedCalculation = ref(false)
-const formIsValid = ref(false)
+const isFormValid = ref(false)
 const validationError = ref<string | null>(null)
 
 watch(
@@ -155,17 +94,18 @@ const calculate = () => {
   hasAttemptedCalculation.value = true
   const mappedFormState = mapFormData(formState)
   const validationResult = formSchema.safeParse(mappedFormState)
-  formIsValid.value = validationResult.success
+  isFormValid.value = validationResult.success
 
   if (!validationResult.success) {
     validationError.value = validationResult.error.issues[0]?.message ?? 'Błąd danych.'
     return
   }
 
-  const totalSeconds =
-    mappedFormState.referenceTimeHours * 3600 +
-    mappedFormState.referenceTimeMinutes * 60 +
-    mappedFormState.referenceTimeSeconds
+  const totalSeconds = toSeconds({
+    hours: mappedFormState.referenceTimeHours,
+    minutes: mappedFormState.referenceTimeMinutes,
+    seconds: mappedFormState.referenceTimeSeconds,
+  })
 
   const optimizedResult = calculateOptimalRunParams(
     totalSeconds,
@@ -230,7 +170,7 @@ const onPresetSelected = (time?: Time) => {
     </fieldset>
 
     <label class="label full-width">
-      Doświadczenie biegowe
+      Bez problemu jestem w stanie przebiec:
       <select v-model.number="formState.riegelExponent">
         <option v-for="option in RIEGEL_OPTIONS" :key="option.key" :value="option.value">
           {{ option.label }}
@@ -252,7 +192,7 @@ const onPresetSelected = (time?: Time) => {
     >
       Oblicz
     </ButtonComponent>
-    <p v-if="hasAttemptedCalculation && !formIsValid" class="form-error">{{ validationError }}</p>
+    <p v-if="hasAttemptedCalculation && !isFormValid" class="form-error">{{ validationError }}</p>
   </div>
 </template>
 
