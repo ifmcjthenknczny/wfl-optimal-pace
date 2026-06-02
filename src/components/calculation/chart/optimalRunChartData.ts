@@ -1,5 +1,5 @@
 import calculateWflCarCatchTime from '../car'
-import { MAX_DISTANCE_IN_KMS } from '../../../config'
+import { MAX_DISTANCE_IN_KMS } from '../../../config/calculation'
 import calculateRunnerTime, { RIEGEL_EXPONENTS, type RunnerBaseValues } from '../riegel'
 import { type ChartDataPoint } from './types'
 

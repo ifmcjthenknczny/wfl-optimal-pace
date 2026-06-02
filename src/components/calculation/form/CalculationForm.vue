@@ -9,6 +9,7 @@ import ButtonComponent from '@/components/utils/ButtonComponent.vue'
 import DistanceInput from './input/DistanceInput.vue'
 import { type Time } from './types.ts'
 import { formSchema } from './validation.ts'
+import { env } from '@/config/env.ts'
 
 const emit = defineEmits<{
   (e: 'calculated', result: ReturnType<typeof calculateOptimalRunParams> | null): void
@@ -169,7 +170,7 @@ const onPresetSelected = (time?: Time) => {
       </div>
     </fieldset>
 
-    <label class="label full-width">
+    <label class="label full-width" v-if="env.VITE_USE_RIEGEL_EXPONENTS">
       Bez problemu jestem w stanie przebiec:
       <select v-model.number="formState.riegelExponent">
         <option v-for="option in RIEGEL_OPTIONS" :key="option.key" :value="option.value">

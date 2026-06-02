@@ -1,4 +1,4 @@
-import { MOBILE_BREAKPOINT_PX } from '@/config'
+import { MOBILE_BREAKPOINT_PX } from '@/config/mobile'
 
 export const calculatePace = (timeMinutes: number, distanceKms: number) => {
   return timeMinutes / distanceKms

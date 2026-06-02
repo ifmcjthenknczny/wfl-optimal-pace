@@ -6,7 +6,7 @@ export const RIEGEL_EXPONENTS = {
   casual: 1.1,
   beginner: 1.15,
 
-  default: 1.08,
+  default: 1.06,
 } as const
 
 export type RunnerBaseValues = {
