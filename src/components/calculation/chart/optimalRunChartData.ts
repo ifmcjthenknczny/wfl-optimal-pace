@@ -28,6 +28,7 @@ export const gatherOptimalRunChartData = (
   const potentialMaxDistanceKms = optimalDistance * 1.8
   const maxDistanceKms =
     potentialMaxDistanceKms > MAX_DISTANCE_IN_KMS ? MAX_DISTANCE_IN_KMS : potentialMaxDistanceKms
+  let optimalDistanceIndex: number = 0
   const carPoints: ChartDataPoint[] = [
     {
       x: 0,
@@ -47,15 +48,21 @@ export const gatherOptimalRunChartData = (
     distanceKms <= maxDistanceKms;
     distanceKms += DATA_ACCURACY_KM
   ) {
+    const isWithinOptimalDistanceRange = optimalDistance > distanceKms - DATA_ACCURACY_KM
     const shouldAddOptimalResultThisIteration =
-      optimalDistance > distanceKms - DATA_ACCURACY_KM &&
+      isWithinOptimalDistanceRange &&
       optimalDistance < distanceKms &&
       Math.abs(optimalDistance - distanceKms) > 1e-6
     if (shouldAddOptimalResultThisIteration) {
       addChartEntry({ carPoints, runnerPoints }, runnerBaseValues, optimalDistance, exponent)
     }
+    if (isWithinOptimalDistanceRange) {
+      optimalDistanceIndex = shouldAddOptimalResultThisIteration
+        ? carPoints.length - 1
+        : carPoints.length
+    }
     addChartEntry({ carPoints, runnerPoints }, runnerBaseValues, distanceKms, exponent)
   }
 
-  return { carPoints, runnerPoints }
+  return { carPoints, runnerPoints, optimalDistanceIndex }
 }

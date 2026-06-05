@@ -51,6 +51,7 @@ const clearResults = () => {
         <OptimalRunChart
           :car-points="optimalRunChartData.carPoints"
           :runner-points="optimalRunChartData.runnerPoints"
+          :optimal-distance-index="optimalRunChartData.optimalDistanceIndex"
         />
       </SlideWrapper>
       <SlideWrapper v-if="startDelayChartData">

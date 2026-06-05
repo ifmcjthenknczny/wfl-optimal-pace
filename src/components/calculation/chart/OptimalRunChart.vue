@@ -11,10 +11,26 @@ import ContentWrapper from '@/components/slide/ContentWrapper.vue'
 const props = defineProps<{
   carPoints: ChartDataPoint[]
   runnerPoints: ChartDataPoint[]
+  optimalDistanceIndex: number
 }>()
 
 const chartCanvas = ref<HTMLCanvasElement | null>(null)
 let chartInstance: Chart | null = null
+
+const pointsConfig = (dataset: ChartDataPoint[], optimalDistanceIndex: number) => {
+  return dataset.map((point, index) => {
+    const isOptimal = index === optimalDistanceIndex
+    return {
+      ...point,
+      pointRadius: isOptimal ? 10 : 0,
+      pointHoverRadius: isOptimal ? 14 : 5,
+      pointHitRadius: isOptimal ? 20 : 5,
+      pointBackgroundColor: isOptimal ? '#FF4500' : undefined,
+      pointBorderColor: isOptimal ? '#fff' : undefined,
+      pointBorderWidth: isOptimal ? 2 : 0,
+    }
+  })
+}
 
 const createChart = () => {
   if (!chartCanvas.value) {
@@ -23,9 +39,9 @@ const createChart = () => {
   const applyMobileView = isMobile()
 
   const lineOptions = {
-    borderWidth: applyMobileView ? 2 : 3,
     pointRadius: 0,
     pointHitRadius: 10,
+    borderWidth: applyMobileView ? 2 : 3,
     tension: 0.1,
   }
 
@@ -40,14 +56,14 @@ const createChart = () => {
       datasets: [
         {
           label: 'Biegacz',
-          data: props.runnerPoints,
+          data: pointsConfig(props.runnerPoints, props.optimalDistanceIndex),
           borderColor: '#2f8f6b',
           backgroundColor: '#2f8f6b',
           ...lineOptions,
         },
         {
           label: 'Samochód',
-          data: props.carPoints,
+          data: pointsConfig(props.carPoints, props.optimalDistanceIndex),
           borderColor: '#eb4034',
           backgroundColor: '#eb4034',
           ...lineOptions,
