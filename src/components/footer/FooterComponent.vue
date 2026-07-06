@@ -1,12 +1,21 @@
+<script setup lang="ts">
+import FooterLink from './FooterLink.vue'
+</script>
+
 <template>
   <footer class="footer">
     <div class="footer-container">
+      <FooterLink
+        href="https://www.wingsforlifeworldrun.com/pl"
+        label="Wings for Life"
+        position="left"
+      />
       <p>©2026 Maciej Konieczny</p>
-      <div class="repo">
-        <a class="repo-link" href="https://github.com/ifmcjthenknczny/wfl-optimal-pace"
-          >Repository</a
-        >
-      </div>
+      <FooterLink
+        href="https://github.com/ifmcjthenknczny/wfl-optimal-pace"
+        label="Repository"
+        position="right"
+      />
     </div>
   </footer>
 </template>
@@ -24,13 +33,6 @@ p {
   align-items: center;
 }
 
-.repo {
-  position: absolute;
-  right: 0;
-  top: 0;
-  margin-right: 8px;
-}
-
 .footer {
   position: fixed;
   bottom: 0;
@@ -44,13 +46,5 @@ p {
   align-items: center;
   display: flex;
   flex-direction: column;
-}
-
-.repo-link {
-  font-size: 0.5rem;
-}
-
-a {
-  color: white;
 }
 </style>

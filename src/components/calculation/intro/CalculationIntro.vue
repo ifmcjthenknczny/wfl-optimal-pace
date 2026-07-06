@@ -1,12 +1,17 @@
 <template>
   <div class="intro">
-    <img alt="Wings for Life logo" class="logo" src="@/assets/logo.png" />
+    <a href="https://www.wingsforlifeworldrun.com/pl" target="_blank"
+      ><img alt="Wings for Life logo" class="logo" src="@/assets/logo.png"
+    /></a>
     <h1>Kalkulator Optymalnego Biegu</h1>
-    <p>Podaj swój wynik z ostatnich zawodów aby oszacować realny cel tempa na bieg.</p>
     <p>
-      Model wylicza Twoje możliwości na podstawie wzorów Riegla, porównuje je ze schematem
-      poruszania się samochodu pościgowego i optymalizuje tempo pod kątem osiągnięcia najdłuższego
-      przebiegniętego dystansu.
+      Podaj swój wynik z ostatnich zawodów lub tempo runa, aby oszacować realny cel tempa na zawody
+      Wings for Life.
+    </p>
+    <p>
+      Model matematyczny oparty na wzorach Riegla wyliczy Twoje możliwości i porówna je ze schematem
+      poruszania się samochodu pościgowego - jednocześnie optymaliząc tempo pod kątem osiągnięcia
+      najdłuższego przebiegniętego dystansu.
     </p>
   </div>
 </template>
