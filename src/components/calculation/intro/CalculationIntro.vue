@@ -10,7 +10,7 @@
     </p>
     <p>
       Model matematyczny oparty na wzorach Riegla wyliczy Twoje możliwości i porówna je ze schematem
-      poruszania się samochodu pościgowego - jednocześnie optymaliząc tempo pod kątem osiągnięcia
+      poruszania się samochodu pościgowego - jednocześnie optymaliząc tempo pod kątem osiągnięcia przez Ciebie
       najdłuższego przebiegniętego dystansu.
     </p>
   </div>
