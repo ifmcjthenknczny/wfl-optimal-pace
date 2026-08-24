@@ -29,7 +29,27 @@ export const pl = {
     halfmarathon: 'półmaraton',
     marathon: 'maraton',
 
-    error: {},
+    validation: {
+      required: 'To pole jest wymagane',
+      invalid_number: 'Wpisz liczbę',
+      invalid_type: 'Nieprawidłowy typ danych',
+      default_error: 'Wprowadzona wartość jest nieprawidłowa',
+      too_small_number: 'Wartość nie może być mniejsza niż {val}',
+      too_big_number: 'Wartość nie może być większa niż {val}',
+      distance_positive: 'Dystans referencyjny musi być większy niż 0 km',
+      hours_min: 'Godziny nie mogą być ujemne',
+      delay_min: 'Opóźnienie nie może być ujemne',
+      time_min: 'Czas referencyjny musi być większy od {val}',
+      distance_min: 'Dystans musi być większy niż {val} km',
+      unrealistic_pace: 'Nie ściemniaj XD',
+
+      distance_number: 'Dystans musi być liczbą',
+      delay_number: 'Opóźnienie musi być liczbą',
+
+      hours_int: 'Godziny muszą być liczbą całkowitą',
+      minutes_int: 'Minuty muszą być liczbą całkowitą',
+      seconds_int: 'Sekundy muszą być liczbą całkowitą',
+    },
   },
 
   intro: {

@@ -14,6 +14,8 @@ import { useI18n } from '@/i18n/useI18n.ts'
 
 const { t, tc } = useI18n()
 
+// TODO: show user validation error even when they enters comma in hours/minutes/seconds
+
 const emit = defineEmits<{
   (e: 'calculated', result: ReturnType<typeof calculateOptimalRunParams> | null): void
   (e: 'gathered', data: ReturnType<typeof gatherOptimalRunChartData> | null): void
@@ -83,12 +85,17 @@ const mapFormData = (formState: FormState): FormState => {
 
   return {
     ...formState,
-    referenceTimeHours: shouldExtractFullHoursFromMinutes
-      ? referenceTimeFullHoursWithMinutes.hours
-      : formState.referenceTimeHours,
-    referenceTimeMinutes: shouldExtractFullHoursFromMinutes
-      ? referenceTimeFullHoursWithMinutes.minutes
-      : formState.referenceTimeMinutes,
+    referenceTimeHours: replaceCommaByDot(
+      shouldExtractFullHoursFromMinutes
+        ? referenceTimeFullHoursWithMinutes.hours
+        : formState.referenceTimeHours,
+    ),
+    referenceTimeMinutes: replaceCommaByDot(
+      shouldExtractFullHoursFromMinutes
+        ? referenceTimeFullHoursWithMinutes.minutes
+        : formState.referenceTimeMinutes,
+    ),
+    referenceTimeSeconds: replaceCommaByDot(formState.referenceTimeSeconds),
     referenceDistanceKms: replaceCommaByDot(formState.referenceDistanceKms),
     runnerStartDelayMinutes: replaceCommaByDot(formState.runnerStartDelayMinutes),
   }
@@ -155,6 +162,19 @@ const legend = computed(() => `${tc('form.result')} (${tc('common.netTime')})`)
 const riegelLabel = computed(() => tc('form.canRun'))
 const delayLabel = computed(() => tc('form.delay'))
 const buttonText = computed(() => tc('form.calculate'))
+
+const formattedValidationError = computed(() => {
+  const rawError = validationError.value ?? 'validation.default_error'
+  const colonIndex = rawError.indexOf(':')
+
+  if (colonIndex !== -1) {
+    const key = rawError.slice(0, colonIndex)
+    const val = rawError.slice(colonIndex + 1)
+    return t(`form.${key}`, { val })
+  }
+
+  return t(`form.${rawError}`)
+})
 </script>
 
 <template>
@@ -201,7 +221,9 @@ const buttonText = computed(() => tc('form.calculate'))
     >
       {{ buttonText }}
     </ButtonComponent>
-    <p v-if="hasAttemptedCalculation && !isFormValid" class="form-error">{{ validationError }}</p>
+    <p v-if="hasAttemptedCalculation && !isFormValid" class="form-error">
+      {{ formattedValidationError }}
+    </p>
   </div>
 </template>
 

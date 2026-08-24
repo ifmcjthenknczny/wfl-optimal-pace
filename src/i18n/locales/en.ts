@@ -29,7 +29,27 @@ export const en = {
     halfmarathon: 'halfmarathon',
     marathon: 'marathon',
 
-    error: {},
+    validation: {
+      required: 'This field is required',
+      invalid_number: 'Enter a valid number',
+      invalid_type: 'Invalid data type',
+      default_error: 'The entered value is invalid',
+      too_small_number: 'Value cannot be less than {val}',
+      too_big_number: 'Value cannot be greater than {val}',
+      distance_positive: 'Distance must be greater than 0 km',
+      hours_min: 'Hours cannot be negative',
+      delay_min: 'Delay cannot be negative',
+      time_min: 'Reference time must be greater than {val}',
+      distance_min: 'Reference distance must be greater than {val} km',
+      unrealistic_pace: "Don't bullshit me XD",
+
+      distance_number: 'Distance must be a number',
+      delay_number: 'Start delay must be a number',
+
+      hours_int: 'Hours must be an integer',
+      minutes_int: 'Minutes must be an integer',
+      seconds_int: 'Seconds must be an integer',
+    },
   },
 
   intro: {

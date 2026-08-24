@@ -4,7 +4,7 @@ import { formatTime, calculatePace } from '../helpers'
 import type { Time } from './types'
 
 const MIN_REASONABLE_DISTANCE_KMS = 1.5
-const MIN_REASONABLE_TIME_SECONDS = 3.5 * 60
+const MIN_REASONABLE_TIME_MINUTES = 3.5
 const MIN_REASONABLE_PACE = 2.25
 
 const toMinutes = ({ hours = 0, minutes = 0, seconds = 0 }: Partial<Time>) => {
@@ -23,16 +23,15 @@ const ULTRA_HUMAN_COEFFICIENT = 1.03
 
 type WorldRecordDistance = keyof typeof WORLD_RECORDS
 
-// TODO: form errors mapper to separate file, i18n errors
 export const formSchema = z
   .object({
     referenceDistanceKms: z
-      .number('Wpisz dystans jako liczbę')
-      .positive('Dystans musi być większy niż 0 km'),
-    referenceTimeHours: z.number().int().min(0, 'Godziny nie mogą być ujemne'),
-    referenceTimeMinutes: z.number().int().min(0).max(59),
-    referenceTimeSeconds: z.number().int().min(0).max(59),
-    runnerStartDelayMinutes: z.number().min(0, 'Opóźnienie nie może być ujemne'),
+      .number('validation.distance_number')
+      .positive('validation.distance_positive'),
+    referenceTimeHours: z.number().int('validation.hours_int').min(0, 'validation.hours_min'),
+    referenceTimeMinutes: z.number().int('validation.minutes_int').min(0).max(59),
+    referenceTimeSeconds: z.number().int('validation.seconds_int').min(0).max(59),
+    runnerStartDelayMinutes: z.number('validation.delay_number').min(0, 'validation.delay_min'),
     riegelExponent: z
       .number()
       .min(Math.min(...Object.values(RIEGEL_EXPONENTS)))
@@ -41,16 +40,19 @@ export const formSchema = z
   })
   .refine(
     (values) =>
-      values.referenceTimeHours * 3600 +
-        values.referenceTimeMinutes * 60 +
-        values.referenceTimeSeconds >=
-      MIN_REASONABLE_TIME_SECONDS,
+      toMinutes({
+        hours: values.referenceTimeHours,
+        minutes: values.referenceTimeMinutes,
+        seconds: values.referenceTimeSeconds,
+      }) >= MIN_REASONABLE_TIME_MINUTES,
     {
-      message: `Czas referencyjny musi być większy od ${formatTime(MIN_REASONABLE_TIME_SECONDS)}.`,
+      message: `validation.time_min:${formatTime(MIN_REASONABLE_TIME_MINUTES)}`,
+      path: ['referenceTimeHours'],
     },
   )
   .refine((values) => values.referenceDistanceKms >= MIN_REASONABLE_DISTANCE_KMS, {
-    message: `Dystans musi być większy niż ${MIN_REASONABLE_DISTANCE_KMS} km.`,
+    message: `validation.distance_min:${MIN_REASONABLE_DISTANCE_KMS}`,
+    path: ['referenceDistanceKms'],
   })
   .refine(
     (values) => {
@@ -77,5 +79,8 @@ export const formSchema = z
       }
       return true
     },
-    { message: 'Nie ściemniaj XD' },
+    {
+      message: 'validation.unrealistic_pace',
+      path: ['referenceDistanceKms'],
+    },
   )
