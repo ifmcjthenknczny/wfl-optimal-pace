@@ -2,12 +2,20 @@
 import CalculatorIntro from './components/calculation/intro/CalculationIntro.vue'
 import FooterComponent from './components/footer/FooterComponent.vue'
 import CalculationComponent from './components/calculation/CalculationComponent.vue'
+import { watchEffect } from 'vue'
+import { useI18n } from './i18n/useI18n.ts'
+import LanguageButton from './components/utils/LanguageButton.vue'
 
-// TODO: i18n
+const { t } = useI18n()
+
+watchEffect(() => {
+  document.title = t('pageTitle')
+})
 </script>
 
 <template>
   <header>
+    <LanguageButton />
     <div class="wrapper">
       <CalculatorIntro />
     </div>

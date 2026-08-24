@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { z } from 'zod'
 import calculateOptimalRunParams from './optimize'
 import { gatherOptimalRunChartData } from '../chart/optimalRunChartData'
@@ -10,6 +10,9 @@ import DistanceInput from './input/DistanceInput.vue'
 import { type Time } from './types.ts'
 import { formSchema } from './validation.ts'
 import { env } from '@/config/env.ts'
+import { useI18n } from '@/i18n/useI18n.ts'
+
+const { t, tc } = useI18n()
 
 const emit = defineEmits<{
   (e: 'calculated', result: ReturnType<typeof calculateOptimalRunParams> | null): void
@@ -31,19 +34,19 @@ const toSeconds = ({ hours, minutes, seconds = 0 }: Time) => {
 
 type RunnerLevel = Exclude<keyof typeof RIEGEL_EXPONENTS, 'default'>
 
-const RIEGEL_LABELS: Record<RunnerLevel, string> = {
-  pro: '40 i więcej km',
+const RIEGEL_LABELS = computed<Record<RunnerLevel, string>>(() => ({
+  pro: `40 ${t('form.atLeast')} km`,
   semipro: '30 - 39 km',
   advanced: '20 - 29 km',
   regular: '10 - 19 km',
   casual: '5 - 9 km',
-  beginner: 'Do 5 km',
-}
+  beginner: `${tc('form.atMost')} 5 km`,
+}))
 
 const RIEGEL_OPTIONS = Object.entries(RIEGEL_EXPONENTS).map(([key, value]) => ({
   key,
   value,
-  label: RIEGEL_LABELS[key as RunnerLevel],
+  label: RIEGEL_LABELS.value[key as RunnerLevel],
 }))
 
 type FormState = z.infer<typeof formSchema>
@@ -147,6 +150,11 @@ const onPresetSelected = (time?: Time) => {
   formState.referenceTimeMinutes = time.minutes
   formState.referenceTimeSeconds = time.seconds ?? 0
 }
+
+const legend = computed(() => `${tc('form.result')} (${tc('common.netTime')})`)
+const riegelLabel = computed(() => tc('form.canRun'))
+const delayLabel = computed(() => tc('form.delay'))
+const buttonText = computed(() => tc('form.calculate'))
 </script>
 
 <template>
@@ -154,7 +162,7 @@ const onPresetSelected = (time?: Time) => {
     <DistanceInput v-model="formState.referenceDistanceKms" @preset-selected="onPresetSelected" />
 
     <fieldset>
-      <legend>Wynik na zawodach (czas netto)</legend>
+      <legend>{{ legend }}</legend>
       <div class="form-time-grid">
         <label class="unit-label"
           >[h] <input v-model.number="formState.referenceTimeHours" type="number" min="0"
@@ -171,7 +179,7 @@ const onPresetSelected = (time?: Time) => {
     </fieldset>
 
     <label class="label full-width" v-if="env.VITE_USE_RIEGEL_EXPONENTS">
-      Bez problemu jestem w stanie przebiec:
+      {{ riegelLabel }}:
       <select v-model.number="formState.riegelExponent">
         <option v-for="option in RIEGEL_OPTIONS" :key="option.key" :value="option.value">
           {{ option.label }}
@@ -180,7 +188,7 @@ const onPresetSelected = (time?: Time) => {
     </label>
 
     <label class="label">
-      Opóźnienie startu na Wings For Life [min]
+      {{ delayLabel }} [min]
       <input v-model="formState.runnerStartDelayMinutes" type="text" min="0" />
     </label>
 
@@ -191,7 +199,7 @@ const onPresetSelected = (time?: Time) => {
       class="form-calculate-button"
       @click="calculate"
     >
-      Oblicz
+      {{ buttonText }}
     </ButtonComponent>
     <p v-if="hasAttemptedCalculation && !isFormValid" class="form-error">{{ validationError }}</p>
   </div>

@@ -18,7 +18,7 @@ const ULTRA_HUMAN_COEFFICIENT = 1.03
 
 type WorldRecordDistance = keyof typeof WORLD_RECORDS
 
-// TODO: form errors mapper to separate file, polish errors
+// TODO: form errors mapper to separate file, i18n errors
 export const formSchema = z
   .object({
     referenceDistanceKms: z

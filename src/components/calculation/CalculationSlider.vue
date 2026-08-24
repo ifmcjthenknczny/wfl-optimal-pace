@@ -17,7 +17,7 @@
     </div>
     <div class="slider-footer">
       <ButtonComponent color="danger" size="lg" @click="$emit('clear')">
-        Wróć do formularza
+        {{ tc('result.return') }}
       </ButtonComponent>
     </div>
   </div>
@@ -26,6 +26,9 @@
 <script setup lang="ts">
 import { ref, provide, computed } from 'vue'
 import ButtonComponent from '../utils/ButtonComponent.vue'
+import { useI18n } from '@/i18n/useI18n.ts'
+
+const { tc } = useI18n()
 
 const currentIndex = ref(0)
 const totalSlides = ref(0)

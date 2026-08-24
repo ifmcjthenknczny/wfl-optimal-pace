@@ -2,6 +2,8 @@
 import { formatTime, formatPace } from '../helpers'
 import calculateOptimalRunParams from '../form/optimize'
 import ContentWrapper from '@/components/slide/ContentWrapper.vue'
+import { useI18n } from '@/i18n/useI18n'
+import { computed } from 'vue'
 
 // TODO: remove start delay input from form and add here a slider component for possibility to dynamically change start delay time (30 sec intervals from 0 up to 15 minutes). optimal values are calculated immediately, debounced values are calculated for chart
 // TODO: fix result-item visually
@@ -9,30 +11,34 @@ import ContentWrapper from '@/components/slide/ContentWrapper.vue'
 defineProps<{
   result: ReturnType<typeof calculateOptimalRunParams>
 }>()
+
+const { tc } = useI18n()
+
+const header = computed(() => `${tc('result.header')}:`)
 </script>
 
 <template>
-  <ContentWrapper header="Wynik obliczeń optymalnego biegu:" v-if="result">
+  <ContentWrapper :header="header" v-if="result">
     <div class="results-wrapper">
       <div class="results-grid">
         <div class="result-item result-item--primary">
-          <span class="result-label">Średnie tempo</span>
+          <span class="result-label">{{ tc('result.avgPace') }}</span>
           <strong class="result-value">{{ formatPace(result.avgPace) }}</strong>
         </div>
 
         <div class="result-item result-item--secondary">
-          <span class="result-label">Dystans</span>
+          <span class="result-label">{{ tc('common.distance') }}</span>
           <strong class="result-value">{{ result.distanceKms.toFixed(3) }} km</strong>
         </div>
 
         <div class="result-group">
           <div class="result-item-inner">
-            <span class="result-label">Czas netto</span>
+            <span class="result-label">{{ tc('common.netTime') }}</span>
             <strong class="result-value">{{ formatTime(result.netRunnerTimeMinutes) }}</strong>
           </div>
           <div class="result-divider"></div>
           <div class="result-item-inner">
-            <span class="result-label">Czas brutto</span>
+            <span class="result-label">{{ tc('common.grossTime') }}</span>
             <strong class="result-value">{{ formatTime(result.grossRunnerTimeMinutes) }}</strong>
           </div>
         </div>

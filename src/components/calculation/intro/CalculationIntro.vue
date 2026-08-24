@@ -1,17 +1,20 @@
+<script lang="ts" setup>
+import { useI18n } from '@/i18n/useI18n'
+
+const { t } = useI18n()
+</script>
+
 <template>
   <div class="intro">
     <a href="https://www.wingsforlifeworldrun.com/pl" target="_blank"
       ><img alt="Wings for Life logo" class="logo" src="@/assets/logo.png"
     /></a>
-    <h1>Kalkulator Optymalnego Biegu</h1>
+    <h1>{{ t('intro.title') }}</h1>
     <p>
-      Podaj swój wynik z ostatnich zawodów lub tempo runa, aby oszacować realny cel tempa na zawody
-      Wings for Life.
+      {{ t('intro.instruction') }}
     </p>
     <p>
-      Model matematyczny oparty na wzorach Riegla wyliczy Twoje możliwości i porówna je ze schematem
-      poruszania się samochodu pościgowego - jednocześnie optymaliząc tempo pod kątem osiągnięcia przez Ciebie
-      najdłuższego przebiegniętego dystansu.
+      {{ t('intro.explanation') }}
     </p>
   </div>
 </template>

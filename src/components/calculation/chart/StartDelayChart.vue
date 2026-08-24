@@ -5,12 +5,15 @@ import { formatTime, isMobile } from '../helpers'
 import { MAX_DELAY_TIME_MINUTES } from './startDelayChartData'
 import { type ChartDataPoint } from './types'
 import ContentWrapper from '@/components/slide/ContentWrapper.vue'
+import { useI18n } from '@/i18n/useI18n'
 
 // TODO: deduplicate chart component
 
 const props = defineProps<{
   points: ChartDataPoint[]
 }>()
+
+const { tc, locale } = useI18n()
 
 const chartCanvas = ref<HTMLCanvasElement | null>(null)
 let chartInstance: Chart | null = null
@@ -38,7 +41,7 @@ const createChart = () => {
     data: {
       datasets: [
         {
-          label: 'Dystans (km)',
+          label: `${tc('common.distance')} (km)`,
           data: props.points,
           borderColor: '#2f8f6b',
           backgroundColor: '#2f8f6b',
@@ -65,11 +68,11 @@ const createChart = () => {
           callbacks: {
             title: (items) => {
               const time = items[0]?.parsed.x
-              return `Opóźnienie startu: ${formatTime(time ?? 0, false)}`
+              return `${tc('common.delay')}: ${formatTime(time ?? 0, false)}`
             },
             label: (context) => {
               const distance = context.parsed.y
-              return `Dystans: ${distance?.toFixed(3)} km`
+              return `${tc('common.distance')}: ${distance?.toFixed(3)} km`
             },
           },
         },
@@ -82,7 +85,7 @@ const createChart = () => {
           grid: gridOptions,
           title: {
             display: true,
-            text: 'Czas [min]',
+            text: `${tc('common.time')} [min]`,
           },
           ticks: {
             callback: (value) => `${value} min`,
@@ -94,7 +97,7 @@ const createChart = () => {
           grid: gridOptions,
           title: {
             display: !applyMobileView,
-            text: 'Dystans [km]',
+            text: `${tc('common.distance')} [km]`,
           },
         },
       },
@@ -105,7 +108,7 @@ const createChart = () => {
 onMounted(createChart)
 
 watch(
-  [() => props.points],
+  [() => props.points, () => locale],
   () => {
     if (chartInstance) {
       chartInstance.destroy()
@@ -117,7 +120,7 @@ watch(
 </script>
 
 <template>
-  <ContentWrapper header="Opóźnienie startu a przebiegnięty dystans:">
+  <ContentWrapper :header="`${tc('chart.startDelay.header')}:`">
     <canvas ref="chartCanvas"></canvas>
   </ContentWrapper>
 </template>

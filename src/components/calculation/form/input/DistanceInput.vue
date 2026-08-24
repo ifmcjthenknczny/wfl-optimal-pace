@@ -1,7 +1,7 @@
 <template>
   <div class="distance-input">
     <label class="label">
-      Dystans zawodów [km]
+      {{ label }}
       <input :value="modelValue" @input="onInput" type="text" />
     </label>
     <div class="distance-presets">
@@ -20,19 +20,25 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { type Time } from '../types'
+import { useI18n } from '@/i18n/useI18n'
 
 type Preset = {
   label: string
   value: number
 } & Time
 
-const PRESETS: Preset[] = [
+const { tc } = useI18n()
+
+const PRESETS = computed<Preset[]>(() => [
   { label: '5 km', value: 5, hours: 0, minutes: 27, seconds: 30 },
   { label: '10 km', value: 10, hours: 1, minutes: 0, seconds: 0 },
-  { label: 'Półmaraton', value: 21.0975, hours: 2, minutes: 0, seconds: 0 },
-  { label: 'Maraton', value: 42.195, hours: 4, minutes: 0, seconds: 0 },
-] as const
+  { label: tc('form.halfmarathon'), value: 21.0975, hours: 2, minutes: 0, seconds: 0 },
+  { label: tc('form.marathon'), value: 42.195, hours: 4, minutes: 0, seconds: 0 },
+])
+
+const label = computed(() => `${tc('form.distance')} [km]`)
 
 const props = defineProps<{
   modelValue: number | string
