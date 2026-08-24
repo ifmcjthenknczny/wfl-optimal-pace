@@ -25,7 +25,7 @@ const replaceCommaByDot = (num: number): number => {
 }
 
 const extractFullHours = (minutes: number): Time => {
-  return { hours: Math.floor(minutes / 60), minutes: minutes % 60 }
+  return { hours: Math.floor(minutes / 60), minutes: minutes % 60, seconds: 0 }
 }
 
 const toSeconds = ({ hours, minutes, seconds = 0 }: Time) => {

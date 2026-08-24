@@ -1,17 +1,22 @@
 import z from 'zod'
 import { RIEGEL_EXPONENTS } from '../riegel'
 import { formatTime, calculatePace } from '../helpers'
+import type { Time } from './types'
 
 const MIN_REASONABLE_DISTANCE_KMS = 1.5
 const MIN_REASONABLE_TIME_SECONDS = 3.5 * 60
 const MIN_REASONABLE_PACE = 2.25
 
+const toMinutes = ({ hours = 0, minutes = 0, seconds = 0 }: Partial<Time>) => {
+  return hours * 60 + minutes + seconds / 60
+}
+
 const WORLD_RECORDS = {
-  1.5: 3 + 26 / 60,
-  5: 12 + 35 / 60,
-  10: 26 + 11 / 60,
-  21.097: 57 + 20 / 60,
-  42.195: 1 * 60 + 59 + 30 / 60,
+  1.5: toMinutes({ minutes: 3, seconds: 26 }),
+  5: toMinutes({ minutes: 12, seconds: 35 }),
+  10: toMinutes({ minutes: 26, seconds: 11 }),
+  21.097: toMinutes({ minutes: 57, seconds: 20 }),
+  42.195: toMinutes({ hours: 1, minutes: 59, seconds: 30 }),
 } as const
 
 const ULTRA_HUMAN_COEFFICIENT = 1.03
