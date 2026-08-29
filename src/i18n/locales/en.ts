@@ -53,14 +53,15 @@ export const en = {
   },
 
   intro: {
-    title: 'Optimal Run Calculator',
+    title: 'Pace goal calculator',
     instruction:
       'Enter your recent race result or your race pace to estimate a realistic pace goal for the Wings for Life race.',
     explanation: `A mathematical model based on Riegel's formulas will calculate your abilities and compare them to the movement pattern of a chase car - simultaneously optimizing your pace to achieve the longest distance you've run.`,
+    disclaimer: `Keep in mind that these calculations have their limitations - they assume you have the necessary endurance base for the target distance, and even the most precise math can't predict the weather, course elevation, or how you'll feel on race day. The unique Wings for Life format means rigid numbers take a back seat, so treat this result simply as a helpful tactical guide, keeping in mind that having fun and supporting the cause are what matter most on the course.`,
   },
 
   result: {
-    header: 'Optimal Run Calculation Result',
+    header: 'Optimal run calculation result',
 
     avgPace: 'average pace',
     return: 'return to form',

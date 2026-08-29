@@ -4,7 +4,7 @@ import Chart from 'chart.js/auto'
 import { formatTime, isMobile } from '../helpers'
 import { type ChartDataPoint } from './types'
 import ContentWrapper from '@/components/slide/ContentWrapper.vue'
-import { useI18n } from '@/i18n/useI18n'
+import { useI18n } from '@/i18n/i18n'
 
 // TODO: deduplicate chart component
 // TODO: optimal point in chart should attract cursor

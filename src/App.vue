@@ -3,8 +3,9 @@ import CalculatorIntro from './components/calculation/intro/CalculationIntro.vue
 import FooterComponent from './components/footer/FooterComponent.vue'
 import CalculationComponent from './components/calculation/CalculationComponent.vue'
 import { watchEffect } from 'vue'
-import { useI18n } from './i18n/useI18n.ts'
+import { useI18n } from './i18n/i18n.ts'
 import LanguageButton from './components/utils/LanguageButton.vue'
+import CalculationDisclaimer from './components/calculation/intro/CalculationDisclaimer.vue'
 
 const { t } = useI18n()
 
@@ -24,6 +25,8 @@ watchEffect(() => {
   <main>
     <CalculationComponent />
   </main>
+
+  <CalculationDisclaimer />
   <FooterComponent />
 </template>
 
@@ -40,7 +43,6 @@ main {
 @media (min-width: 641px) {
   main {
     margin-top: 0;
-    margin-bottom: 4rem;
   }
 
   header {

@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { ref, provide, computed } from 'vue'
 import ButtonComponent from '../utils/ButtonComponent.vue'
-import { useI18n } from '@/i18n/useI18n.ts'
+import { useI18n } from '@/i18n/i18n.ts'
 
 const { tc } = useI18n()
 

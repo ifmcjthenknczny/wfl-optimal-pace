@@ -53,11 +53,13 @@ export const pl = {
   },
 
   intro: {
-    title: 'Kalkulator Optymalnego Biegu',
+    title: 'Kalkulator planu na bieg',
     instruction:
       'Podaj swój wynik z ostatnich zawodów lub tempo runa, aby oszacować realny cel tempa na zawody Wings for Life.',
     explanation:
       'Model matematyczny oparty na wzorach Riegla wyliczy Twoje możliwości i porówna je ze schematem poruszania się samochodu pościgowego - jednocześnie optymaliząc tempo pod kątem osiągnięcia przez Ciebie najdłuższego przebiegniętego dystansu.',
+    disclaimer:
+      'Pamiętaj, że wyliczenia mają swoje ograniczenia – zakłądają np. posiadanie odpowiedniej bazy wytrzymałościowej pod dany dystans. Dodatkowo nawet najbardziej precyzyjna matematyka nie przewidzi pogody, profilu trasy czy dyspozycji dnia. Unikalna formuła Wings for Life sprawia, że sztywne cyfry schodzą na dalszy plan, dlatego traktuj ten wynik wyłącznie jako pomocniczą wskazówkę taktyczną, pamiętając, że na trasie najważniejsza jest świetna zabawa i charytatywne oblicze tego wydarzenia.',
   },
 
   result: {

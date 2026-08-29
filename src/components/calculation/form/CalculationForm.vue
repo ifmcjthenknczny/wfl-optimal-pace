@@ -10,7 +10,7 @@ import DistanceInput from './input/DistanceInput.vue'
 import { type Time } from './types.ts'
 import { formSchema } from './validation.ts'
 import { env } from '@/config/env.ts'
-import { useI18n } from '@/i18n/useI18n.ts'
+import { useI18n } from '@/i18n/i18n.ts'
 
 const { t, tc } = useI18n()
 

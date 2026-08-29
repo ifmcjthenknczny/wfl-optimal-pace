@@ -2,7 +2,7 @@
 import { formatTime, formatPace } from '../helpers'
 import calculateOptimalRunParams from '../form/optimize'
 import ContentWrapper from '@/components/slide/ContentWrapper.vue'
-import { useI18n } from '@/i18n/useI18n'
+import { useI18n } from '@/i18n/i18n'
 import { computed } from 'vue'
 
 // TODO: remove start delay input from form and add here a slider component for possibility to dynamically change start delay time (30 sec intervals from 0 up to 15 minutes). optimal values are calculated immediately, debounced values are calculated for chart
